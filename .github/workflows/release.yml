@@ -35,8 +35,8 @@ jobs:
           fi
       - name: Swap the glexml path dependency for the Hex release
         run: |
-          sed -i 's#^glexml = { path = "../glexml" }#glexml = ">= 1.0.0 and < 2.0.0"#' gleam.toml
-          grep -q '^glexml = ">= 1.0.0' gleam.toml
+          sed -i 's#^glexml = { path = "../glexml" }#glexml = ">= 0.1.0 and < 1.0.0"#' gleam.toml
+          grep -q '^glexml = ">= 0.1.0' gleam.toml
       - run: gleam deps download
       - run: gleam test --target erlang
       - run: gleam test --target javascript
