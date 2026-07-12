@@ -5,7 +5,6 @@
                     glexml]},
     {description, "An EPUB toolkit for the Erlang and JavaScript targets, built on glexml"},
     {modules, [glepub@cfi,
-               glepub_cfi_test,
-               glepub_test]},
+               glepub_cfi_test]},
     {registered, []}
 ]}.

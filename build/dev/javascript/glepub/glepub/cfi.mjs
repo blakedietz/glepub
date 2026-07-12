@@ -260,9 +260,11 @@ function step_to_string(step) {
 }
 
 /**
- * Print a CFI back out as an `epubcfi(...)` string.
+ * The CFI path without the `epubcfi(...)` wrapper — the form used for
+ * the intra-document part of a fragment, and for joining onto a spine
+ * item's base path with `!`.
  */
-export function to_string(cfi) {
+export function path_to_string(cfi) {
   let _block;
   let _pipe = cfi.parts;
   let _pipe$1 = $list.map(
@@ -284,7 +286,14 @@ export function to_string(cfi) {
     _block$1 = "";
   }
   let offset = _block$1;
-  return (("epubcfi(" + path) + offset) + ")";
+  return path + offset;
+}
+
+/**
+ * Print a CFI back out as an `epubcfi(...)` string.
+ */
+export function to_string(cfi) {
+  return ("epubcfi(" + path_to_string(cfi)) + ")";
 }
 
 function spine_position(index) {

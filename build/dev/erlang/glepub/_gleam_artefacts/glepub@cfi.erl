@@ -1,7 +1,7 @@
 -module(glepub@cfi).
 -compile([no_auto_import, nowarn_unused_vars, nowarn_unused_function, nowarn_nomatch, inline]).
 -define(FILEPATH, "src/glepub/cfi.gleam").
--export([parse/1, to_string/1, locate/1, spine_item/2]).
+-export([parse/1, path_to_string/1, to_string/1, locate/1, spine_item/2]).
 -export_type([step/0, cfi/0]).
 
 -if(?OTP_RELEASE >= 27).
@@ -218,7 +218,7 @@ parse(Text) ->
             {error, nil}
     end.
 
--file("src/glepub/cfi.gleam", 164).
+-file("src/glepub/cfi.gleam", 171).
 -spec escape_assertion(binary()) -> binary().
 escape_assertion(Assertion) ->
     _pipe = [<<"^"/utf8>>,
@@ -237,7 +237,7 @@ escape_assertion(Assertion) ->
         end
     ).
 
--file("src/glepub/cfi.gleam", 156).
+-file("src/glepub/cfi.gleam", 163).
 -spec step_to_string(step()) -> binary().
 step_to_string(Step) ->
     Assertion@1 = case erlang:element(3, Step) of
@@ -251,10 +251,14 @@ step_to_string(Step) ->
     <<<<"/"/utf8, (erlang:integer_to_binary(erlang:element(2, Step)))/binary>>/binary,
         Assertion@1/binary>>.
 
--file("src/glepub/cfi.gleam", 144).
-?DOC(" Print a CFI back out as an `epubcfi(...)` string.\n").
--spec to_string(cfi()) -> binary().
-to_string(Cfi) ->
+-file("src/glepub/cfi.gleam", 151).
+?DOC(
+    " The CFI path without the `epubcfi(...)` wrapper — the form used for\n"
+    " the intra-document part of a fragment, and for joining onto a spine\n"
+    " item's base path with `!`.\n"
+).
+-spec path_to_string(cfi()) -> binary().
+path_to_string(Cfi) ->
     Path = begin
         _pipe = erlang:element(2, Cfi),
         _pipe@3 = gleam@list:map(_pipe, fun(Steps) -> _pipe@1 = Steps,
@@ -269,10 +273,15 @@ to_string(Cfi) ->
         none ->
             <<""/utf8>>
     end,
-    <<<<<<"epubcfi("/utf8, Path/binary>>/binary, Offset@1/binary>>/binary,
-        ")"/utf8>>.
+    <<Path/binary, Offset@1/binary>>.
 
--file("src/glepub/cfi.gleam", 198).
+-file("src/glepub/cfi.gleam", 144).
+?DOC(" Print a CFI back out as an `epubcfi(...)` string.\n").
+-spec to_string(cfi()) -> binary().
+to_string(Cfi) ->
+    <<<<"epubcfi("/utf8, (path_to_string(Cfi))/binary>>/binary, ")"/utf8>>.
+
+-file("src/glepub/cfi.gleam", 205).
 -spec spine_position(integer()) -> {ok, integer()} | {error, nil}.
 spine_position(Index) ->
     case (Index >= 2) andalso ((Index rem 2) =:= 0) of
@@ -283,7 +292,7 @@ spine_position(Index) ->
             {error, nil}
     end.
 
--file("src/glepub/cfi.gleam", 173).
+-file("src/glepub/cfi.gleam", 180).
 ?DOC(
     " Split a publication-level CFI into the spine position it addresses and\n"
     " the remainder pointing within that chapter's document, if any.\n"
@@ -318,7 +327,7 @@ locate(Cfi) ->
             {error, nil}
     end.
 
--file("src/glepub/cfi.gleam", 189).
+-file("src/glepub/cfi.gleam", 196).
 ?DOC(
     " The spine item a CFI addresses, with the remainder of the CFI pointing\n"
     " within that chapter's document, if any.\n"

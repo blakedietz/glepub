@@ -252,6 +252,52 @@ export function parse_rejects_test() {
   return undefined;
 }
 
+export function path_to_string_test() {
+  let $ = $cfi.parse("epubcfi(/6/4!/4/10/3:10)");
+  let parsed;
+  if ($ instanceof Ok) {
+    parsed = $[0];
+  } else {
+    throw makeError(
+      "let_assert",
+      FILEPATH,
+      "glepub_cfi_test",
+      41,
+      "path_to_string_test",
+      "Pattern match failed, no pattern matched the value.",
+      {
+        value: $,
+        start: 1209,
+        end: 1270,
+        pattern_start: 1220,
+        pattern_end: 1230
+      }
+    )
+  }
+  let $1 = $cfi.path_to_string(parsed);
+  let $2 = "/6/4!/4/10/3:10";
+  if (!($1 === $2)) {
+    throw makeError(
+      "assert",
+      FILEPATH,
+      "glepub_cfi_test",
+      42,
+      "path_to_string_test",
+      "Assertion failed.",
+      {
+        kind: "binary_operator",
+        operator: "==",
+        left: { kind: "expression", value: $1, start: 1280, end: 1306 },
+        right: { kind: "literal", value: $2, start: 1310, end: 1327 },
+        start: 1273,
+        end: 1327,
+        expression_start: 1280
+      }
+    )
+  }
+  return undefined;
+}
+
 export function locate_test() {
   let $ = $cfi.parse("epubcfi(/6/4!/4/10/3:10)");
   let full;
@@ -262,15 +308,15 @@ export function locate_test() {
       "let_assert",
       FILEPATH,
       "glepub_cfi_test",
-      41,
+      46,
       "locate_test",
       "Pattern match failed, no pattern matched the value.",
       {
         value: $,
-        start: 1201,
-        end: 1260,
-        pattern_start: 1212,
-        pattern_end: 1220
+        start: 1356,
+        end: 1415,
+        pattern_start: 1367,
+        pattern_end: 1375
       }
     )
   }
@@ -287,15 +333,15 @@ export function locate_test() {
           "let_assert",
           FILEPATH,
           "glepub_cfi_test",
-          42,
+          47,
           "locate_test",
           "Pattern match failed, no pattern matched the value.",
           {
             value: $1,
-            start: 1263,
-            end: 1314,
-            pattern_start: 1274,
-            pattern_end: 1295
+            start: 1418,
+            end: 1469,
+            pattern_start: 1429,
+            pattern_end: 1450
           }
         )
       }
@@ -304,15 +350,15 @@ export function locate_test() {
         "let_assert",
         FILEPATH,
         "glepub_cfi_test",
-        42,
+        47,
         "locate_test",
         "Pattern match failed, no pattern matched the value.",
         {
           value: $1,
-          start: 1263,
-          end: 1314,
-          pattern_start: 1274,
-          pattern_end: 1295
+          start: 1418,
+          end: 1469,
+          pattern_start: 1429,
+          pattern_end: 1450
         }
       )
     }
@@ -321,15 +367,15 @@ export function locate_test() {
       "let_assert",
       FILEPATH,
       "glepub_cfi_test",
-      42,
+      47,
       "locate_test",
       "Pattern match failed, no pattern matched the value.",
       {
         value: $1,
-        start: 1263,
-        end: 1314,
-        pattern_start: 1274,
-        pattern_end: 1295
+        start: 1418,
+        end: 1469,
+        pattern_start: 1429,
+        pattern_end: 1450
       }
     )
   }
@@ -340,17 +386,17 @@ export function locate_test() {
       "assert",
       FILEPATH,
       "glepub_cfi_test",
-      43,
+      48,
       "locate_test",
       "Assertion failed.",
       {
         kind: "binary_operator",
         operator: "==",
-        left: { kind: "expression", value: $4, start: 1324, end: 1344 },
-        right: { kind: "literal", value: $5, start: 1348, end: 1369 },
-        start: 1317,
-        end: 1369,
-        expression_start: 1324
+        left: { kind: "expression", value: $4, start: 1479, end: 1499 },
+        right: { kind: "literal", value: $5, start: 1503, end: 1524 },
+        start: 1472,
+        end: 1524,
+        expression_start: 1479
       }
     )
   }
@@ -363,15 +409,15 @@ export function locate_test() {
       "let_assert",
       FILEPATH,
       "glepub_cfi_test",
-      46,
+      51,
       "locate_test",
       "Pattern match failed, no pattern matched the value.",
       {
         value: $6,
-        start: 1416,
-        end: 1472,
-        pattern_start: 1427,
-        pattern_end: 1443
+        start: 1571,
+        end: 1627,
+        pattern_start: 1582,
+        pattern_end: 1598
       }
     )
   }
@@ -382,17 +428,17 @@ export function locate_test() {
       "assert",
       FILEPATH,
       "glepub_cfi_test",
-      47,
+      52,
       "locate_test",
       "Assertion failed.",
       {
         kind: "binary_operator",
         operator: "==",
-        left: { kind: "expression", value: $7, start: 1482, end: 1506 },
-        right: { kind: "literal", value: $8, start: 1510, end: 1524 },
-        start: 1475,
-        end: 1524,
-        expression_start: 1482
+        left: { kind: "expression", value: $7, start: 1637, end: 1661 },
+        right: { kind: "literal", value: $8, start: 1665, end: 1679 },
+        start: 1630,
+        end: 1679,
+        expression_start: 1637
       }
     )
   }
@@ -405,15 +451,15 @@ export function locate_test() {
       "let_assert",
       FILEPATH,
       "glepub_cfi_test",
-      50,
+      55,
       "locate_test",
       "Pattern match failed, no pattern matched the value.",
       {
         value: $9,
-        start: 1587,
-        end: 1634,
-        pattern_start: 1598,
-        pattern_end: 1605
+        start: 1742,
+        end: 1789,
+        pattern_start: 1753,
+        pattern_end: 1760
       }
     )
   }
@@ -424,17 +470,17 @@ export function locate_test() {
       "assert",
       FILEPATH,
       "glepub_cfi_test",
-      51,
+      56,
       "locate_test",
       "Assertion failed.",
       {
         kind: "binary_operator",
         operator: "==",
-        left: { kind: "expression", value: $10, start: 1644, end: 1659 },
-        right: { kind: "literal", value: $11, start: 1663, end: 1673 },
-        start: 1637,
-        end: 1673,
-        expression_start: 1644
+        left: { kind: "expression", value: $10, start: 1799, end: 1814 },
+        right: { kind: "literal", value: $11, start: 1818, end: 1828 },
+        start: 1792,
+        end: 1828,
+        expression_start: 1799
       }
     )
   }
@@ -472,15 +518,15 @@ export function spine_item_test() {
       "let_assert",
       FILEPATH,
       "glepub_cfi_test",
-      55,
+      60,
       "spine_item_test",
       "Pattern match failed, no pattern matched the value.",
       {
         value: $,
-        start: 1706,
-        end: 1750,
-        pattern_start: 1717,
-        pattern_end: 1725
+        start: 1861,
+        end: 1905,
+        pattern_start: 1872,
+        pattern_end: 1880
       }
     )
   }
@@ -493,15 +539,15 @@ export function spine_item_test() {
       "let_assert",
       FILEPATH,
       "glepub_cfi_test",
-      56,
+      61,
       "spine_item_test",
       "Pattern match failed, no pattern matched the value.",
       {
         value: $1,
-        start: 1753,
-        end: 1808,
-        pattern_start: 1764,
-        pattern_end: 1774
+        start: 1908,
+        end: 1963,
+        pattern_start: 1919,
+        pattern_end: 1929
       }
     )
   }
@@ -516,15 +562,15 @@ export function spine_item_test() {
         "let_assert",
         FILEPATH,
         "glepub_cfi_test",
-        57,
+        62,
         "spine_item_test",
         "Pattern match failed, no pattern matched the value.",
         {
           value: $2,
-          start: 1811,
-          end: 1873,
-          pattern_start: 1822,
-          pattern_end: 1842
+          start: 1966,
+          end: 2028,
+          pattern_start: 1977,
+          pattern_end: 1997
         }
       )
     }
@@ -533,15 +579,15 @@ export function spine_item_test() {
       "let_assert",
       FILEPATH,
       "glepub_cfi_test",
-      57,
+      62,
       "spine_item_test",
       "Pattern match failed, no pattern matched the value.",
       {
         value: $2,
-        start: 1811,
-        end: 1873,
-        pattern_start: 1822,
-        pattern_end: 1842
+        start: 1966,
+        end: 2028,
+        pattern_start: 1977,
+        pattern_end: 1997
       }
     )
   }
@@ -552,17 +598,17 @@ export function spine_item_test() {
       "assert",
       FILEPATH,
       "glepub_cfi_test",
-      58,
+      63,
       "spine_item_test",
       "Assertion failed.",
       {
         kind: "binary_operator",
         operator: "==",
-        left: { kind: "expression", value: $4, start: 1883, end: 1895 },
-        right: { kind: "literal", value: $5, start: 1899, end: 1903 },
-        start: 1876,
-        end: 1903,
-        expression_start: 1883
+        left: { kind: "expression", value: $4, start: 2038, end: 2050 },
+        right: { kind: "literal", value: $5, start: 2054, end: 2058 },
+        start: 2031,
+        end: 2058,
+        expression_start: 2038
       }
     )
   }

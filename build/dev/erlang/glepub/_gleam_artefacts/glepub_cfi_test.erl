@@ -1,7 +1,7 @@
 -module(glepub_cfi_test).
 -compile([no_auto_import, nowarn_unused_vars, nowarn_unused_function, nowarn_nomatch, inline]).
 -define(FILEPATH, "test/glepub_cfi_test.gleam").
--export([parse_test/0, parse_escaped_assertion_test/0, parse_rejects_test/0, locate_test/0, spine_item_test/0]).
+-export([parse_test/0, parse_escaped_assertion_test/0, parse_rejects_test/0, path_to_string_test/0, locate_test/0, spine_item_test/0]).
 
 -file("test/glepub_cfi_test.gleam", 8).
 -spec parse_test() -> nil.
@@ -289,6 +289,51 @@ parse_rejects_test() ->
     end.
 
 -file("test/glepub_cfi_test.gleam", 40).
+-spec path_to_string_test() -> nil.
+path_to_string_test() ->
+    Parsed@1 = case glepub@cfi:parse(<<"epubcfi(/6/4!/4/10/3:10)"/utf8>>) of
+        {ok, Parsed} -> Parsed;
+        _assert_fail ->
+            erlang:error(#{gleam_error => let_assert,
+                        message => <<"Pattern match failed, no pattern matched the value."/utf8>>,
+                        file => <<?FILEPATH/utf8>>,
+                        module => <<"glepub_cfi_test"/utf8>>,
+                        function => <<"path_to_string_test"/utf8>>,
+                        line => 41,
+                        value => _assert_fail,
+                        start => 1209,
+                        'end' => 1270,
+                        pattern_start => 1220,
+                        pattern_end => 1230})
+    end,
+    _assert_subject = glepub@cfi:path_to_string(Parsed@1),
+    _assert_subject@1 = <<"/6/4!/4/10/3:10"/utf8>>,
+    case _assert_subject =:= _assert_subject@1 of
+        true -> nil;
+        false -> erlang:error(#{gleam_error => assert,
+                message => <<"Assertion failed."/utf8>>,
+                file => <<?FILEPATH/utf8>>,
+                module => <<"glepub_cfi_test"/utf8>>,
+                function => <<"path_to_string_test"/utf8>>,
+                line => 42,
+                kind => binary_operator,
+                operator => '==',
+                left => #{kind => expression,
+                    value => _assert_subject,
+                    start => 1280,
+                    'end' => 1306
+                    },
+                right => #{kind => literal,
+                    value => _assert_subject@1,
+                    start => 1310,
+                    'end' => 1327
+                    },
+                start => 1273,
+                'end' => 1327,
+                expression_start => 1280})
+    end.
+
+-file("test/glepub_cfi_test.gleam", 45).
 -spec locate_test() -> nil.
 locate_test() ->
     Full@1 = case glepub@cfi:parse(<<"epubcfi(/6/4!/4/10/3:10)"/utf8>>) of
@@ -299,12 +344,12 @@ locate_test() ->
                         file => <<?FILEPATH/utf8>>,
                         module => <<"glepub_cfi_test"/utf8>>,
                         function => <<"locate_test"/utf8>>,
-                        line => 41,
+                        line => 46,
                         value => _assert_fail,
-                        start => 1201,
-                        'end' => 1260,
-                        pattern_start => 1212,
-                        pattern_end => 1220})
+                        start => 1356,
+                        'end' => 1415,
+                        pattern_start => 1367,
+                        pattern_end => 1375})
     end,
     Intra@1 = case glepub@cfi:locate(Full@1) of
         {ok, {1, {some, Intra}}} -> Intra;
@@ -314,12 +359,12 @@ locate_test() ->
                         file => <<?FILEPATH/utf8>>,
                         module => <<"glepub_cfi_test"/utf8>>,
                         function => <<"locate_test"/utf8>>,
-                        line => 42,
+                        line => 47,
                         value => _assert_fail@1,
-                        start => 1263,
-                        'end' => 1314,
-                        pattern_start => 1274,
-                        pattern_end => 1295})
+                        start => 1418,
+                        'end' => 1469,
+                        pattern_start => 1429,
+                        pattern_end => 1450})
     end,
     _assert_subject = glepub@cfi:to_string(Intra@1),
     _assert_subject@1 = <<"epubcfi(/4/10/3:10)"/utf8>>,
@@ -330,22 +375,22 @@ locate_test() ->
                 file => <<?FILEPATH/utf8>>,
                 module => <<"glepub_cfi_test"/utf8>>,
                 function => <<"locate_test"/utf8>>,
-                line => 43,
+                line => 48,
                 kind => binary_operator,
                 operator => '==',
                 left => #{kind => expression,
                     value => _assert_subject,
-                    start => 1324,
-                    'end' => 1344
+                    start => 1479,
+                    'end' => 1499
                     },
                 right => #{kind => literal,
                     value => _assert_subject@1,
-                    start => 1348,
-                    'end' => 1369
+                    start => 1503,
+                    'end' => 1524
                     },
-                start => 1317,
-                'end' => 1369,
-                expression_start => 1324})
+                start => 1472,
+                'end' => 1524,
+                expression_start => 1479})
     end,
     Chapter_only@1 = case glepub@cfi:parse(<<"epubcfi(/6/2)"/utf8>>) of
         {ok, Chapter_only} -> Chapter_only;
@@ -355,12 +400,12 @@ locate_test() ->
                         file => <<?FILEPATH/utf8>>,
                         module => <<"glepub_cfi_test"/utf8>>,
                         function => <<"locate_test"/utf8>>,
-                        line => 46,
+                        line => 51,
                         value => _assert_fail@2,
-                        start => 1416,
-                        'end' => 1472,
-                        pattern_start => 1427,
-                        pattern_end => 1443})
+                        start => 1571,
+                        'end' => 1627,
+                        pattern_start => 1582,
+                        pattern_end => 1598})
     end,
     _assert_subject@2 = glepub@cfi:locate(Chapter_only@1),
     _assert_subject@3 = {ok, {0, none}},
@@ -371,22 +416,22 @@ locate_test() ->
                 file => <<?FILEPATH/utf8>>,
                 module => <<"glepub_cfi_test"/utf8>>,
                 function => <<"locate_test"/utf8>>,
-                line => 47,
+                line => 52,
                 kind => binary_operator,
                 operator => '==',
                 left => #{kind => expression,
                     value => _assert_subject@2,
-                    start => 1482,
-                    'end' => 1506
+                    start => 1637,
+                    'end' => 1661
                     },
                 right => #{kind => literal,
                     value => _assert_subject@3,
-                    start => 1510,
-                    'end' => 1524
+                    start => 1665,
+                    'end' => 1679
                     },
-                start => 1475,
-                'end' => 1524,
-                expression_start => 1482})
+                start => 1630,
+                'end' => 1679,
+                expression_start => 1637})
     end,
     Odd@1 = case glepub@cfi:parse(<<"epubcfi(/6/3)"/utf8>>) of
         {ok, Odd} -> Odd;
@@ -396,12 +441,12 @@ locate_test() ->
                         file => <<?FILEPATH/utf8>>,
                         module => <<"glepub_cfi_test"/utf8>>,
                         function => <<"locate_test"/utf8>>,
-                        line => 50,
+                        line => 55,
                         value => _assert_fail@3,
-                        start => 1587,
-                        'end' => 1634,
-                        pattern_start => 1598,
-                        pattern_end => 1605})
+                        start => 1742,
+                        'end' => 1789,
+                        pattern_start => 1753,
+                        pattern_end => 1760})
     end,
     _assert_subject@4 = glepub@cfi:locate(Odd@1),
     _assert_subject@5 = {error, nil},
@@ -412,25 +457,25 @@ locate_test() ->
                 file => <<?FILEPATH/utf8>>,
                 module => <<"glepub_cfi_test"/utf8>>,
                 function => <<"locate_test"/utf8>>,
-                line => 51,
+                line => 56,
                 kind => binary_operator,
                 operator => '==',
                 left => #{kind => expression,
                     value => _assert_subject@4,
-                    start => 1644,
-                    'end' => 1659
+                    start => 1799,
+                    'end' => 1814
                     },
                 right => #{kind => literal,
                     value => _assert_subject@5,
-                    start => 1663,
-                    'end' => 1673
+                    start => 1818,
+                    'end' => 1828
                     },
-                start => 1637,
-                'end' => 1673,
-                expression_start => 1644})
+                start => 1792,
+                'end' => 1828,
+                expression_start => 1799})
     end.
 
--file("test/glepub_cfi_test.gleam", 61).
+-file("test/glepub_cfi_test.gleam", 66).
 -spec fixture() -> fun((binary()) -> {ok, bitstring()} | {error, nil}).
 fixture() ->
     Files = begin
@@ -469,7 +514,7 @@ fixture() ->
     end,
     fun(Path) -> gleam_stdlib:map_get(Files, Path) end.
 
--file("test/glepub_cfi_test.gleam", 54).
+-file("test/glepub_cfi_test.gleam", 59).
 -spec spine_item_test() -> nil.
 spine_item_test() ->
     Book@1 = case glepub:open(fixture()) of
@@ -480,12 +525,12 @@ spine_item_test() ->
                         file => <<?FILEPATH/utf8>>,
                         module => <<"glepub_cfi_test"/utf8>>,
                         function => <<"spine_item_test"/utf8>>,
-                        line => 55,
+                        line => 60,
                         value => _assert_fail,
-                        start => 1706,
-                        'end' => 1750,
-                        pattern_start => 1717,
-                        pattern_end => 1725})
+                        start => 1861,
+                        'end' => 1905,
+                        pattern_start => 1872,
+                        pattern_end => 1880})
     end,
     Parsed@1 = case glepub@cfi:parse(<<"epubcfi(/6/4!/4/2)"/utf8>>) of
         {ok, Parsed} -> Parsed;
@@ -495,12 +540,12 @@ spine_item_test() ->
                         file => <<?FILEPATH/utf8>>,
                         module => <<"glepub_cfi_test"/utf8>>,
                         function => <<"spine_item_test"/utf8>>,
-                        line => 56,
+                        line => 61,
                         value => _assert_fail@1,
-                        start => 1753,
-                        'end' => 1808,
-                        pattern_start => 1764,
-                        pattern_end => 1774})
+                        start => 1908,
+                        'end' => 1963,
+                        pattern_start => 1919,
+                        pattern_end => 1929})
     end,
     Item@1 = case glepub@cfi:spine_item(Book@1, Parsed@1) of
         {ok, {Item, {some, _}}} -> Item;
@@ -510,12 +555,12 @@ spine_item_test() ->
                         file => <<?FILEPATH/utf8>>,
                         module => <<"glepub_cfi_test"/utf8>>,
                         function => <<"spine_item_test"/utf8>>,
-                        line => 57,
+                        line => 62,
                         value => _assert_fail@2,
-                        start => 1811,
-                        'end' => 1873,
-                        pattern_start => 1822,
-                        pattern_end => 1842})
+                        start => 1966,
+                        'end' => 2028,
+                        pattern_start => 1977,
+                        pattern_end => 1997})
     end,
     _assert_subject = erlang:element(2, erlang:element(2, Item@1)),
     _assert_subject@1 = <<"c2"/utf8>>,
@@ -526,20 +571,20 @@ spine_item_test() ->
                 file => <<?FILEPATH/utf8>>,
                 module => <<"glepub_cfi_test"/utf8>>,
                 function => <<"spine_item_test"/utf8>>,
-                line => 58,
+                line => 63,
                 kind => binary_operator,
                 operator => '==',
                 left => #{kind => expression,
                     value => _assert_subject,
-                    start => 1883,
-                    'end' => 1895
+                    start => 2038,
+                    'end' => 2050
                     },
                 right => #{kind => literal,
                     value => _assert_subject@1,
-                    start => 1899,
-                    'end' => 1903
+                    start => 2054,
+                    'end' => 2058
                     },
-                start => 1876,
-                'end' => 1903,
-                expression_start => 1883})
+                start => 2031,
+                'end' => 2058,
+                expression_start => 2038})
     end.

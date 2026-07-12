@@ -142,6 +142,13 @@ fn span_assertion(
 
 /// Print a CFI back out as an `epubcfi(...)` string.
 pub fn to_string(cfi: Cfi) -> String {
+  "epubcfi(" <> path_to_string(cfi) <> ")"
+}
+
+/// The CFI path without the `epubcfi(...)` wrapper — the form used for
+/// the intra-document part of a fragment, and for joining onto a spine
+/// item's base path with `!`.
+pub fn path_to_string(cfi: Cfi) -> String {
   let path =
     cfi.parts
     |> list.map(fn(steps) { steps |> list.map(step_to_string) |> string.concat })
@@ -150,7 +157,7 @@ pub fn to_string(cfi: Cfi) -> String {
     Some(offset) -> ":" <> int.to_string(offset)
     None -> ""
   }
-  "epubcfi(" <> path <> offset <> ")"
+  path <> offset
 }
 
 fn step_to_string(step: Step) -> String {

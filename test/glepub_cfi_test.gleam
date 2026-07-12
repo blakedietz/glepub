@@ -37,6 +37,11 @@ pub fn parse_rejects_test() {
   assert cfi.parse("epubcfi(/6/4:2/2)") == Error(Nil)
 }
 
+pub fn path_to_string_test() {
+  let assert Ok(parsed) = cfi.parse("epubcfi(/6/4!/4/10/3:10)")
+  assert cfi.path_to_string(parsed) == "/6/4!/4/10/3:10"
+}
+
 pub fn locate_test() {
   let assert Ok(full) = cfi.parse("epubcfi(/6/4!/4/10/3:10)")
   let assert Ok(#(1, Some(intra))) = cfi.locate(full)
