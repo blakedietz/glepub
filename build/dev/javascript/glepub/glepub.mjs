@@ -166,15 +166,16 @@ export const ManifestItem$ManifestItem$properties = (value) => value.properties;
 export const ManifestItem$ManifestItem$3 = (value) => value.properties;
 
 export class SpineItem extends $CustomType {
-  constructor(item, linear, properties) {
+  constructor(item, linear, properties, cfi) {
     super();
     this.item = item;
     this.linear = linear;
     this.properties = properties;
+    this.cfi = cfi;
   }
 }
-export const SpineItem$SpineItem = (item, linear, properties) =>
-  new SpineItem(item, linear, properties);
+export const SpineItem$SpineItem = (item, linear, properties, cfi) =>
+  new SpineItem(item, linear, properties, cfi);
 export const SpineItem$isSpineItem = (value) => value instanceof SpineItem;
 export const SpineItem$SpineItem$item = (value) => value.item;
 export const SpineItem$SpineItem$0 = (value) => value.item;
@@ -182,6 +183,8 @@ export const SpineItem$SpineItem$linear = (value) => value.linear;
 export const SpineItem$SpineItem$1 = (value) => value.linear;
 export const SpineItem$SpineItem$properties = (value) => value.properties;
 export const SpineItem$SpineItem$2 = (value) => value.properties;
+export const SpineItem$SpineItem$cfi = (value) => value.cfi;
+export const SpineItem$SpineItem$3 = (value) => value.cfi;
 
 export class TocEntry extends $CustomType {
   constructor(label, href, children) {
@@ -985,11 +988,48 @@ function parse_metadata(package$, metadata) {
   );
 }
 
+function cfi_assertion(element) {
+  let $ = $glexml.attribute(element, "id");
+  if ($ instanceof Ok) {
+    let id = $[0];
+    return ("[" + id) + "]";
+  } else {
+    return "";
+  }
+}
+
 function properties_of(element) {
   let _pipe = $glexml.attribute(element, "properties");
   let _pipe$1 = $result.unwrap(_pipe, "");
   let _pipe$2 = $string.split(_pipe$1, " ");
   return $list.filter(_pipe$2, (property) => { return property !== ""; });
+}
+
+function require(condition, next) {
+  if (condition) {
+    return next();
+  } else {
+    return new Error(undefined);
+  }
+}
+
+/**
+ * The CFI child step addressing `child` within `parent`: element
+ * children get even indices 2, 4, 6…, with the element's own id as an
+ * assertion when it has one.
+ * 
+ * @ignore
+ */
+function cfi_step(parent, child) {
+  let _block;
+  let _pipe = $glexml.child_elements(parent);
+  let _pipe$1 = $list.take_while(
+    _pipe,
+    (element) => { return !isEqual(element, child); },
+  );
+  _block = $list.length(_pipe$1);
+  let position = _block;
+  return ("/" + $int.to_string(2 * (position + 1))) + cfi_assertion(child);
 }
 
 /**
@@ -1076,26 +1116,35 @@ function build_book(loader, package_path, package$) {
               );
               _block$2 = $dict.from_list(_pipe$3);
               let by_id = _block$2;
+              let spine_cfi = cfi_step(package$, spine_element);
               let _block$3;
-              let _pipe$4 = children_local(spine_element, "itemref");
-              _block$3 = $list.filter_map(
+              let _pipe$4 = $glexml.child_elements(spine_element);
+              let _pipe$5 = $list.index_map(
                 _pipe$4,
-                (itemref) => {
-                  return $result.try$(
-                    $glexml.attribute(itemref, "idref"),
-                    (idref) => {
+                (itemref, position) => {
+                  return require(
+                    $glexml.local_name(itemref.name) === "itemref",
+                    () => {
                       return $result.try$(
-                        $dict.get(by_id, idref),
-                        (item) => {
-                          return new Ok(
-                            new SpineItem(
-                              item,
-                              !isEqual(
-                                $glexml.attribute(itemref, "linear"),
-                                new Ok("no")
-                              ),
-                              properties_of(itemref),
-                            ),
+                        $glexml.attribute(itemref, "idref"),
+                        (idref) => {
+                          return $result.try$(
+                            $dict.get(by_id, idref),
+                            (item) => {
+                              return new Ok(
+                                new SpineItem(
+                                  item,
+                                  !isEqual(
+                                    $glexml.attribute(itemref, "linear"),
+                                    new Ok("no")
+                                  ),
+                                  properties_of(itemref),
+                                  ((spine_cfi + "/") + $int.to_string(
+                                    2 * (position + 1),
+                                  )) + cfi_assertion(itemref),
+                                ),
+                              );
+                            },
                           );
                         },
                       );
@@ -1103,6 +1152,7 @@ function build_book(loader, package_path, package$) {
                   );
                 },
               );
+              _block$3 = $result.values(_pipe$5);
               let spine = _block$3;
               let metadata = parse_metadata(package$, metadata_element);
               let $ = load_navigation(

@@ -120,6 +120,8 @@ pub fn manifest_and_spine_test() {
   assert list.map(book.spine, fn(s) { s.item.href })
     == ["OEBPS/text/chapter1.xhtml", "OEBPS/text/chapter2.xhtml"]
   assert list.map(book.spine, fn(s) { s.linear }) == [True, False]
+  // Package children: metadata /2, manifest /4, spine /6.
+  assert list.map(book.spine, fn(s) { s.cfi }) == ["/6/2", "/6/4"]
   let assert [_, second] = book.spine
   assert second.item.properties == ["scripted"]
   assert book.direction == glepub.RightToLeft

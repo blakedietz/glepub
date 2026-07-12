@@ -71,7 +71,11 @@
         binary(),
         list(binary())}.
 
--type spine_item() :: {spine_item, manifest_item(), boolean(), list(binary())}.
+-type spine_item() :: {spine_item,
+        manifest_item(),
+        boolean(),
+        list(binary()),
+        binary()}.
 
 -type toc_entry() :: {toc_entry,
         binary(),
@@ -91,7 +95,7 @@
     {invalid_xml, binary(), glexml:parse_error()} |
     {invalid_package, binary()}.
 
--file("src/glepub.gleam", 151).
+-file("src/glepub.gleam", 155).
 ?DOC(" Convert an `EpubError` into a human readable message.\n").
 -spec error_to_string(epub_error()) -> binary().
 error_to_string(Error) ->
@@ -109,7 +113,7 @@ error_to_string(Error) ->
             Description
     end.
 
--file("src/glepub.gleam", 690).
+-file("src/glepub.gleam", 728).
 ?DOC(
     " Element children matched by local name, so `dc:title` and plain `title`\n"
     " both count regardless of the prefix a book chose.\n"
@@ -122,7 +126,7 @@ children_local(Element, Name) ->
         fun(Child) -> glexml:local_name(erlang:element(2, Child)) =:= Name end
     ).
 
--file("src/glepub.gleam", 438).
+-file("src/glepub.gleam", 451).
 -spec find_cover(glexml:element(), list(manifest_item())) -> gleam@option:option(manifest_item()).
 find_cover(Metadata, Manifest) ->
     By_property = gleam@list:find(
@@ -180,7 +184,7 @@ find_cover(Metadata, Manifest) ->
             end
     end.
 
--file("src/glepub.gleam", 706).
+-file("src/glepub.gleam", 744).
 ?DOC(" An element's text with whitespace collapsed, for labels and metadata.\n").
 -spec text_of(glexml:element()) -> binary().
 text_of(Element) ->
@@ -191,7 +195,7 @@ text_of(Element) ->
     _pipe@4 = gleam@list:filter(_pipe@3, fun(Part) -> Part /= <<""/utf8>> end),
     gleam@string:join(_pipe@4, <<" "/utf8>>).
 
--file("src/glepub.gleam", 419).
+-file("src/glepub.gleam", 432).
 -spec parse_rendition(glexml:element()) -> rendition().
 parse_rendition(Metadata) ->
     Property = fun(Name) -> _pipe = children_local(Metadata, <<"meta"/utf8>>),
@@ -215,7 +219,7 @@ parse_rendition(Metadata) ->
                 reflowable
         end, Property(<<"orientation"/utf8>>), Property(<<"spread"/utf8>>)}.
 
--file("src/glepub.gleam", 634).
+-file("src/glepub.gleam", 647).
 -spec normalise(binary()) -> binary().
 normalise(Path) ->
     _pipe = gleam@string:split(Path, <<"/"/utf8>>),
@@ -241,7 +245,7 @@ normalise(Path) ->
     _pipe@2 = lists:reverse(_pipe@1),
     gleam@string:join(_pipe@2, <<"/"/utf8>>).
 
--file("src/glepub.gleam", 662).
+-file("src/glepub.gleam", 675).
 -spec do_percent_decode(list(binary()), list(bitstring())) -> list(bitstring()).
 do_percent_decode(Graphemes, Acc) ->
     case Graphemes of
@@ -261,7 +265,7 @@ do_percent_decode(Graphemes, Acc) ->
             do_percent_decode(Rest@1, [gleam_stdlib:identity(Grapheme) | Acc])
     end.
 
--file("src/glepub.gleam", 651).
+-file("src/glepub.gleam", 664).
 -spec percent_decode(binary()) -> binary().
 percent_decode(Text) ->
     case gleam_stdlib:contains_string(Text, <<"%"/utf8>>) of
@@ -275,7 +279,7 @@ percent_decode(Text) ->
             gleam@result:unwrap(_pipe@2, Text)
     end.
 
--file("src/glepub.gleam", 601).
+-file("src/glepub.gleam", 614).
 ?DOC(
     " Resolve a reference found in the document at directory `base` to a\n"
     " container path: percent-decoded, `.`/`..` normalised, fragment kept.\n"
@@ -310,14 +314,14 @@ resolve(Base, Reference) ->
     end,
     <<Resolved/binary, Fragment@1/binary>>.
 
--file("src/glepub.gleam", 695).
+-file("src/glepub.gleam", 733).
 -spec first_local(glexml:element(), binary()) -> {ok, glexml:element()} |
     {error, nil}.
 first_local(Element, Name) ->
     _pipe = children_local(Element, Name),
     gleam@list:first(_pipe).
 
--file("src/glepub.gleam", 579).
+-file("src/glepub.gleam", 592).
 ?DOC(" EPUB 2 `<guide>` references presented as landmarks.\n").
 -spec guide_landmarks(glexml:element(), binary()) -> list(toc_entry()).
 guide_landmarks(Package, Base) ->
@@ -358,7 +362,7 @@ guide_landmarks(Package, Base) ->
             )
     end.
 
--file("src/glepub.gleam", 627).
+-file("src/glepub.gleam", 640).
 -spec dirname(binary()) -> binary().
 dirname(Path) ->
     case begin
@@ -374,7 +378,7 @@ dirname(Path) ->
             <<""/utf8>>
     end.
 
--file("src/glepub.gleam", 561).
+-file("src/glepub.gleam", 574).
 -spec ncx_points(glexml:element(), binary()) -> list(toc_entry()).
 ncx_points(Parent, Base) ->
     _pipe = children_local(Parent, <<"navPoint"/utf8>>),
@@ -408,7 +412,7 @@ ncx_points(Parent, Base) ->
         end
     ).
 
--file("src/glepub.gleam", 554).
+-file("src/glepub.gleam", 567).
 ?DOC(" Parse an EPUB 2 NCX `<navMap>` into the same tree shape.\n").
 -spec parse_ncx(glexml:element(), binary()) -> list(toc_entry()).
 parse_ncx(Root, Base) ->
@@ -420,7 +424,7 @@ parse_ncx(Root, Base) ->
             []
     end.
 
--file("src/glepub.gleam", 680).
+-file("src/glepub.gleam", 693).
 -spec read_xml(fun((binary()) -> {ok, bitstring()} | {error, nil}), binary()) -> {ok,
         glexml:document()} |
     {error, epub_error()}.
@@ -437,7 +441,7 @@ read_xml(Loader, Path) ->
             ) end
     ).
 
--file("src/glepub.gleam", 533).
+-file("src/glepub.gleam", 546).
 -spec nav_list(glexml:element(), binary()) -> list(toc_entry()).
 nav_list(Ol, Base) ->
     _pipe = glexml:children_named(Ol, <<"li"/utf8>>),
@@ -481,7 +485,7 @@ nav_list(Ol, Base) ->
         end
     ).
 
--file("src/glepub.gleam", 715).
+-file("src/glepub.gleam", 753).
 -spec selector_all(glexml:element(), binary()) -> list(glexml:element()).
 selector_all(Element, Css) ->
     case glexml@selector:select(Element, Css) of
@@ -492,7 +496,7 @@ selector_all(Element, Css) ->
             []
     end.
 
--file("src/glepub.gleam", 526).
+-file("src/glepub.gleam", 539).
 ?DOC(
     " Parse one `<nav epub:type=\"...\">` of an EPUB 3 navigation document into\n"
     " a tree.\n"
@@ -510,7 +514,7 @@ parse_nav(Root, Base, Kind) ->
             []
     end.
 
--file("src/glepub.gleam", 472).
+-file("src/glepub.gleam", 485).
 -spec load_navigation(
     fun((binary()) -> {ok, bitstring()} | {error, nil}),
     binary(),
@@ -606,14 +610,14 @@ load_navigation(Loader, Base, Manifest, Spine, Package) ->
             {Toc, [], guide_landmarks(Package, Base)}
     end.
 
--file("src/glepub.gleam", 699).
+-file("src/glepub.gleam", 737).
 -spec first_local_text(glexml:element(), binary()) -> gleam@option:option(binary()).
 first_local_text(Element, Name) ->
     _pipe = first_local(Element, Name),
     _pipe@1 = gleam@result:map(_pipe, fun(Found) -> {some, text_of(Found)} end),
     gleam@result:unwrap(_pipe@1, none).
 
--file("src/glepub.gleam", 325).
+-file("src/glepub.gleam", 338).
 ?DOC(
     " `<meta refines=\"#id\" property=\"p\">value</meta>` associations, by the id\n"
     " they refine.\n"
@@ -650,7 +654,7 @@ refinements_of(Metadata) ->
         end
     ).
 
--file("src/glepub.gleam", 341).
+-file("src/glepub.gleam", 354).
 -spec parse_metadata(glexml:element(), glexml:element()) -> metadata().
 parse_metadata(Package, Metadata) ->
     Refinements = refinements_of(Metadata),
@@ -784,7 +788,18 @@ parse_metadata(Package, Metadata) ->
         end,
         first_local_text(Metadata, <<"rights"/utf8>>)}.
 
--file("src/glepub.gleam", 272).
+-file("src/glepub.gleam", 712).
+-spec cfi_assertion(glexml:element()) -> binary().
+cfi_assertion(Element) ->
+    case glexml:attribute(Element, <<"id"/utf8>>) of
+        {ok, Id} ->
+            <<<<"["/utf8, Id/binary>>/binary, "]"/utf8>>;
+
+        {error, nil} ->
+            <<""/utf8>>
+    end.
+
+-file("src/glepub.gleam", 285).
 -spec properties_of(glexml:element()) -> list(binary()).
 properties_of(Element) ->
     _pipe = glexml:attribute(Element, <<"properties"/utf8>>),
@@ -792,7 +807,38 @@ properties_of(Element) ->
     _pipe@2 = gleam@string:split(_pipe@1, <<" "/utf8>>),
     gleam@list:filter(_pipe@2, fun(Property) -> Property /= <<""/utf8>> end).
 
--file("src/glepub.gleam", 620).
+-file("src/glepub.gleam", 719).
+-spec require(boolean(), fun(() -> {ok, TM} | {error, nil})) -> {ok, TM} |
+    {error, nil}.
+require(Condition, Next) ->
+    case Condition of
+        true ->
+            Next();
+
+        false ->
+            {error, nil}
+    end.
+
+-file("src/glepub.gleam", 704).
+?DOC(
+    " The CFI child step addressing `child` within `parent`: element\n"
+    " children get even indices 2, 4, 6…, with the element's own id as an\n"
+    " assertion when it has one.\n"
+).
+-spec cfi_step(glexml:element(), glexml:element()) -> binary().
+cfi_step(Parent, Child) ->
+    Position = begin
+        _pipe = glexml:child_elements(Parent),
+        _pipe@1 = gleam@list:take_while(
+            _pipe,
+            fun(Element) -> Element /= Child end
+        ),
+        erlang:length(_pipe@1)
+    end,
+    <<<<"/"/utf8, (erlang:integer_to_binary(2 * (Position + 1)))/binary>>/binary,
+        (cfi_assertion(Child))/binary>>.
+
+-file("src/glepub.gleam", 633).
 ?DOC(" The container path without any `#fragment`.\n").
 -spec strip_fragment(binary()) -> binary().
 strip_fragment(Href) ->
@@ -804,7 +850,7 @@ strip_fragment(Href) ->
             Href
     end.
 
--file("src/glepub.gleam", 188).
+-file("src/glepub.gleam", 192).
 -spec build_book(
     fun((binary()) -> {ok, bitstring()} | {error, nil}),
     binary(),
@@ -903,44 +949,61 @@ build_book(Loader, Package_path, Package) ->
                                 ),
                                 maps:from_list(_pipe@8)
                             end,
+                            Spine_cfi = cfi_step(Package, Spine_element),
                             Spine = begin
-                                _pipe@9 = children_local(
-                                    Spine_element,
-                                    <<"itemref"/utf8>>
-                                ),
-                                gleam@list:filter_map(
+                                _pipe@9 = glexml:child_elements(Spine_element),
+                                _pipe@10 = gleam@list:index_map(
                                     _pipe@9,
-                                    fun(Itemref) ->
-                                        gleam@result:'try'(
-                                            glexml:attribute(
-                                                Itemref,
-                                                <<"idref"/utf8>>
-                                            ),
-                                            fun(Idref) ->
+                                    fun(Itemref, Position) ->
+                                        require(
+                                            glexml:local_name(
+                                                erlang:element(2, Itemref)
+                                            )
+                                            =:= <<"itemref"/utf8>>,
+                                            fun() ->
                                                 gleam@result:'try'(
-                                                    gleam_stdlib:map_get(
-                                                        By_id,
-                                                        Idref
+                                                    glexml:attribute(
+                                                        Itemref,
+                                                        <<"idref"/utf8>>
                                                     ),
-                                                    fun(Item@2) ->
-                                                        {ok,
-                                                            {spine_item,
-                                                                Item@2,
-                                                                glexml:attribute(
-                                                                    Itemref,
-                                                                    <<"linear"/utf8>>
-                                                                )
-                                                                /= {ok,
-                                                                    <<"no"/utf8>>},
-                                                                properties_of(
-                                                                    Itemref
-                                                                )}}
+                                                    fun(Idref) ->
+                                                        gleam@result:'try'(
+                                                            gleam_stdlib:map_get(
+                                                                By_id,
+                                                                Idref
+                                                            ),
+                                                            fun(Item@2) ->
+                                                                {ok,
+                                                                    {spine_item,
+                                                                        Item@2,
+                                                                        glexml:attribute(
+                                                                            Itemref,
+                                                                            <<"linear"/utf8>>
+                                                                        )
+                                                                        /= {ok,
+                                                                            <<"no"/utf8>>},
+                                                                        properties_of(
+                                                                            Itemref
+                                                                        ),
+                                                                        <<<<<<Spine_cfi/binary,
+                                                                                    "/"/utf8>>/binary,
+                                                                                (erlang:integer_to_binary(
+                                                                                    2
+                                                                                    * (Position
+                                                                                    + 1)
+                                                                                ))/binary>>/binary,
+                                                                            (cfi_assertion(
+                                                                                Itemref
+                                                                            ))/binary>>}}
+                                                            end
+                                                        )
                                                     end
                                                 )
                                             end
                                         )
                                     end
-                                )
+                                ),
+                                gleam@result:values(_pipe@10)
                             end,
                             Metadata = parse_metadata(Package, Metadata_element),
                             {Toc, Page_list, Landmarks} = load_navigation(
@@ -982,7 +1045,7 @@ build_book(Loader, Package_path, Package) ->
         end
     ).
 
--file("src/glepub.gleam", 167).
+-file("src/glepub.gleam", 171).
 ?DOC(
     " Open a publication: read `META-INF/container.xml`, find the package\n"
     " document, and parse the package, navigation, and cover information.\n"
@@ -1041,7 +1104,7 @@ open(Loader) ->
         end
     ).
 
--file("src/glepub.gleam", 282).
+-file("src/glepub.gleam", 295).
 ?DOC(" Read a manifest item's bytes from the container.\n").
 -spec resource(book(), manifest_item()) -> {ok, bitstring()} |
     {error, epub_error()}.
@@ -1049,7 +1112,7 @@ resource(Book, Item) ->
     _pipe = (erlang:element(12, Book))(erlang:element(3, Item)),
     gleam@result:replace_error(_pipe, {missing_file, erlang:element(3, Item)}).
 
--file("src/glepub.gleam", 296).
+-file("src/glepub.gleam", 309).
 ?DOC(
     " Like `document`, with extra DTD declarations available — typically the\n"
     " XHTML entity set for EPUB 2 content documents.\n"
@@ -1069,7 +1132,7 @@ document_with_dtd(Book, Item, Dtd) ->
             ) end
     ).
 
--file("src/glepub.gleam", 290).
+-file("src/glepub.gleam", 303).
 ?DOC(
     " Read and parse a manifest item as XML — a content document, for\n"
     " instance. EPUB 2 XHTML may use the named entities of the XHTML DTD;\n"
@@ -1080,7 +1143,7 @@ document_with_dtd(Book, Item, Dtd) ->
 document(Book, Item) ->
     document_with_dtd(Book, Item, glexml:empty_dtd()).
 
--file("src/glepub.gleam", 308).
+-file("src/glepub.gleam", 321).
 ?DOC(
     " Find the manifest item a container path (as produced in `TocEntry.href`,\n"
     " fragment ignored) refers to.\n"
@@ -1093,7 +1156,7 @@ item_for_href(Book, Href) ->
         fun(Item) -> erlang:element(3, Item) =:= Path end
     ).
 
--file("src/glepub.gleam", 314).
+-file("src/glepub.gleam", 327).
 ?DOC(" Whether a reference in a content document points outside the container.\n").
 -spec is_external(binary()) -> boolean().
 is_external(Reference) ->

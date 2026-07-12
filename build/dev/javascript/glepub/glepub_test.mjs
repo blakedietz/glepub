@@ -380,68 +380,9 @@ export function manifest_and_spine_test() {
       }
     )
   }
-  let $10 = book.spine;
-  let second;
-  if ($10 instanceof $Empty) {
-    throw makeError(
-      "let_assert",
-      FILEPATH,
-      "glepub_test",
-      123,
-      "manifest_and_spine_test",
-      "Pattern match failed, no pattern matched the value.",
-      {
-        value: $10,
-        start: 4485,
-        end: 4520,
-        pattern_start: 4496,
-        pattern_end: 4507
-      }
-    )
-  } else {
-    let $11 = $10.tail;
-    if ($11 instanceof $Empty) {
-      throw makeError(
-        "let_assert",
-        FILEPATH,
-        "glepub_test",
-        123,
-        "manifest_and_spine_test",
-        "Pattern match failed, no pattern matched the value.",
-        {
-          value: $10,
-          start: 4485,
-          end: 4520,
-          pattern_start: 4496,
-          pattern_end: 4507
-        }
-      )
-    } else {
-      let $12 = $11.tail;
-      if ($12 instanceof $Empty) {
-        second = $11.head;
-      } else {
-        throw makeError(
-          "let_assert",
-          FILEPATH,
-          "glepub_test",
-          123,
-          "manifest_and_spine_test",
-          "Pattern match failed, no pattern matched the value.",
-          {
-            value: $10,
-            start: 4485,
-            end: 4520,
-            pattern_start: 4496,
-            pattern_end: 4507
-          }
-        )
-      }
-    }
-  }
-  let $13 = second.item.properties;
-  let $14 = toList(["scripted"]);
-  if (!(isEqual($13, $14))) {
+  let $10 = $list.map(book.spine, (s) => { return s.cfi; });
+  let $11 = toList(["/6/2", "/6/4"]);
+  if (!(isEqual($10, $11))) {
     throw makeError(
       "assert",
       FILEPATH,
@@ -452,32 +393,112 @@ export function manifest_and_spine_test() {
       {
         kind: "binary_operator",
         operator: "==",
-        left: { kind: "expression", value: $13, start: 4530, end: 4552 },
-        right: { kind: "literal", value: $14, start: 4556, end: 4568 },
-        start: 4523,
-        end: 4568,
-        expression_start: 4530
+        left: { kind: "expression", value: $10, start: 4551, end: 4588 },
+        right: { kind: "literal", value: $11, start: 4592, end: 4608 },
+        start: 4544,
+        end: 4608,
+        expression_start: 4551
       }
     )
   }
-  let $15 = book.direction;
-  let $16 = new $glepub.RightToLeft();
+  let $12 = book.spine;
+  let second;
+  if ($12 instanceof $Empty) {
+    throw makeError(
+      "let_assert",
+      FILEPATH,
+      "glepub_test",
+      125,
+      "manifest_and_spine_test",
+      "Pattern match failed, no pattern matched the value.",
+      {
+        value: $12,
+        start: 4611,
+        end: 4646,
+        pattern_start: 4622,
+        pattern_end: 4633
+      }
+    )
+  } else {
+    let $13 = $12.tail;
+    if ($13 instanceof $Empty) {
+      throw makeError(
+        "let_assert",
+        FILEPATH,
+        "glepub_test",
+        125,
+        "manifest_and_spine_test",
+        "Pattern match failed, no pattern matched the value.",
+        {
+          value: $12,
+          start: 4611,
+          end: 4646,
+          pattern_start: 4622,
+          pattern_end: 4633
+        }
+      )
+    } else {
+      let $14 = $13.tail;
+      if ($14 instanceof $Empty) {
+        second = $13.head;
+      } else {
+        throw makeError(
+          "let_assert",
+          FILEPATH,
+          "glepub_test",
+          125,
+          "manifest_and_spine_test",
+          "Pattern match failed, no pattern matched the value.",
+          {
+            value: $12,
+            start: 4611,
+            end: 4646,
+            pattern_start: 4622,
+            pattern_end: 4633
+          }
+        )
+      }
+    }
+  }
+  let $15 = second.item.properties;
+  let $16 = toList(["scripted"]);
   if (!(isEqual($15, $16))) {
     throw makeError(
       "assert",
       FILEPATH,
       "glepub_test",
-      125,
+      126,
       "manifest_and_spine_test",
       "Assertion failed.",
       {
         kind: "binary_operator",
         operator: "==",
-        left: { kind: "expression", value: $15, start: 4578, end: 4592 },
-        right: { kind: "expression", value: $16, start: 4596, end: 4614 },
-        start: 4571,
-        end: 4614,
-        expression_start: 4578
+        left: { kind: "expression", value: $15, start: 4656, end: 4678 },
+        right: { kind: "literal", value: $16, start: 4682, end: 4694 },
+        start: 4649,
+        end: 4694,
+        expression_start: 4656
+      }
+    )
+  }
+  let $17 = book.direction;
+  let $18 = new $glepub.RightToLeft();
+  if (!(isEqual($17, $18))) {
+    throw makeError(
+      "assert",
+      FILEPATH,
+      "glepub_test",
+      127,
+      "manifest_and_spine_test",
+      "Assertion failed.",
+      {
+        kind: "binary_operator",
+        operator: "==",
+        left: { kind: "expression", value: $17, start: 4704, end: 4718 },
+        right: { kind: "expression", value: $18, start: 4722, end: 4740 },
+        start: 4697,
+        end: 4740,
+        expression_start: 4704
       }
     )
   }
@@ -494,15 +515,15 @@ export function rendition_test() {
       "let_assert",
       FILEPATH,
       "glepub_test",
-      129,
+      131,
       "rendition_test",
       "Pattern match failed, no pattern matched the value.",
       {
         value: $,
-        start: 4646,
-        end: 4688,
-        pattern_start: 4657,
-        pattern_end: 4665
+        start: 4772,
+        end: 4814,
+        pattern_start: 4783,
+        pattern_end: 4791
       }
     )
   }
@@ -513,17 +534,17 @@ export function rendition_test() {
       "assert",
       FILEPATH,
       "glepub_test",
-      130,
+      132,
       "rendition_test",
       "Assertion failed.",
       {
         kind: "binary_operator",
         operator: "==",
-        left: { kind: "expression", value: $1, start: 4698, end: 4719 },
-        right: { kind: "expression", value: $2, start: 4723, end: 4742 },
-        start: 4691,
-        end: 4742,
-        expression_start: 4698
+        left: { kind: "expression", value: $1, start: 4824, end: 4845 },
+        right: { kind: "expression", value: $2, start: 4849, end: 4868 },
+        start: 4817,
+        end: 4868,
+        expression_start: 4824
       }
     )
   }
@@ -534,17 +555,17 @@ export function rendition_test() {
       "assert",
       FILEPATH,
       "glepub_test",
-      131,
+      133,
       "rendition_test",
       "Assertion failed.",
       {
         kind: "binary_operator",
         operator: "==",
-        left: { kind: "expression", value: $3, start: 4752, end: 4773 },
-        right: { kind: "literal", value: $4, start: 4777, end: 4794 },
-        start: 4745,
-        end: 4794,
-        expression_start: 4752
+        left: { kind: "expression", value: $3, start: 4878, end: 4899 },
+        right: { kind: "literal", value: $4, start: 4903, end: 4920 },
+        start: 4871,
+        end: 4920,
+        expression_start: 4878
       }
     )
   }
@@ -554,17 +575,17 @@ export function rendition_test() {
       "assert",
       FILEPATH,
       "glepub_test",
-      132,
+      134,
       "rendition_test",
       "Assertion failed.",
       {
         kind: "binary_operator",
         operator: "==",
-        left: { kind: "expression", value: $5, start: 4804, end: 4830 },
-        right: { kind: "literal", value: new None(), start: 4834, end: 4838 },
-        start: 4797,
-        end: 4838,
-        expression_start: 4804
+        left: { kind: "expression", value: $5, start: 4930, end: 4956 },
+        right: { kind: "literal", value: new None(), start: 4960, end: 4964 },
+        start: 4923,
+        end: 4964,
+        expression_start: 4930
       }
     )
   }
@@ -581,15 +602,15 @@ export function toc_test() {
       "let_assert",
       FILEPATH,
       "glepub_test",
-      136,
+      138,
       "toc_test",
       "Pattern match failed, no pattern matched the value.",
       {
         value: $,
-        start: 4864,
-        end: 4906,
-        pattern_start: 4875,
-        pattern_end: 4883
+        start: 4990,
+        end: 5032,
+        pattern_start: 5001,
+        pattern_end: 5009
       }
     )
   }
@@ -613,17 +634,17 @@ export function toc_test() {
       "assert",
       FILEPATH,
       "glepub_test",
-      138,
+      140,
       "toc_test",
       "Assertion failed.",
       {
         kind: "binary_operator",
         operator: "==",
-        left: { kind: "expression", value: $1, start: 4986, end: 4994 },
-        right: { kind: "literal", value: $2, start: 5002, end: 5211 },
-        start: 4979,
-        end: 5211,
-        expression_start: 4986
+        left: { kind: "expression", value: $1, start: 5112, end: 5120 },
+        right: { kind: "literal", value: $2, start: 5128, end: 5337 },
+        start: 5105,
+        end: 5337,
+        expression_start: 5112
       }
     )
   }
@@ -636,17 +657,17 @@ export function toc_test() {
       "assert",
       FILEPATH,
       "glepub_test",
-      145,
+      147,
       "toc_test",
       "Assertion failed.",
       {
         kind: "binary_operator",
         operator: "==",
-        left: { kind: "expression", value: $3, start: 5221, end: 5235 },
-        right: { kind: "literal", value: $4, start: 5243, end: 5301 },
-        start: 5214,
-        end: 5301,
-        expression_start: 5221
+        left: { kind: "expression", value: $3, start: 5347, end: 5361 },
+        right: { kind: "literal", value: $4, start: 5369, end: 5427 },
+        start: 5340,
+        end: 5427,
+        expression_start: 5347
       }
     )
   }
@@ -663,15 +684,15 @@ export function resources_test() {
       "let_assert",
       FILEPATH,
       "glepub_test",
-      150,
+      152,
       "resources_test",
       "Pattern match failed, no pattern matched the value.",
       {
         value: $,
-        start: 5333,
-        end: 5375,
-        pattern_start: 5344,
-        pattern_end: 5352
+        start: 5459,
+        end: 5501,
+        pattern_start: 5470,
+        pattern_end: 5478
       }
     )
   }
@@ -682,15 +703,15 @@ export function resources_test() {
       "let_assert",
       FILEPATH,
       "glepub_test",
-      151,
+      153,
       "resources_test",
       "Pattern match failed, no pattern matched the value.",
       {
         value: $1,
-        start: 5378,
-        end: 5413,
-        pattern_start: 5389,
-        pattern_end: 5400
+        start: 5504,
+        end: 5539,
+        pattern_start: 5515,
+        pattern_end: 5526
       }
     )
   } else {
@@ -705,15 +726,15 @@ export function resources_test() {
       "let_assert",
       FILEPATH,
       "glepub_test",
-      152,
+      154,
       "resources_test",
       "Pattern match failed, no pattern matched the value.",
       {
         value: $2,
-        start: 5416,
-        end: 5474,
-        pattern_start: 5427,
-        pattern_end: 5438
+        start: 5542,
+        end: 5600,
+        pattern_start: 5553,
+        pattern_end: 5564
       }
     )
   }
@@ -724,17 +745,17 @@ export function resources_test() {
       "assert",
       FILEPATH,
       "glepub_test",
-      153,
+      155,
       "resources_test",
       "Assertion failed.",
       {
         kind: "binary_operator",
         operator: "==",
-        left: { kind: "expression", value: $3, start: 5484, end: 5517 },
-        right: { kind: "literal", value: $4, start: 5521, end: 5539 },
-        start: 5477,
-        end: 5539,
-        expression_start: 5484
+        left: { kind: "expression", value: $3, start: 5610, end: 5643 },
+        right: { kind: "literal", value: $4, start: 5647, end: 5665 },
+        start: 5603,
+        end: 5665,
+        expression_start: 5610
       }
     )
   }
@@ -747,15 +768,15 @@ export function resources_test() {
       "let_assert",
       FILEPATH,
       "glepub_test",
-      155,
+      157,
       "resources_test",
       "Pattern match failed, no pattern matched the value.",
       {
         value: $5,
-        start: 5543,
-        end: 5630,
-        pattern_start: 5554,
-        pattern_end: 5562
+        start: 5669,
+        end: 5756,
+        pattern_start: 5680,
+        pattern_end: 5688
       }
     )
   }
@@ -766,17 +787,17 @@ export function resources_test() {
       "assert",
       FILEPATH,
       "glepub_test",
-      157,
+      159,
       "resources_test",
       "Assertion failed.",
       {
         kind: "binary_operator",
         operator: "==",
-        left: { kind: "expression", value: $6, start: 5640, end: 5647 },
-        right: { kind: "literal", value: $7, start: 5651, end: 5655 },
-        start: 5633,
-        end: 5655,
-        expression_start: 5640
+        left: { kind: "expression", value: $6, start: 5766, end: 5773 },
+        right: { kind: "literal", value: $7, start: 5777, end: 5781 },
+        start: 5759,
+        end: 5781,
+        expression_start: 5766
       }
     )
   }
@@ -787,15 +808,15 @@ export function resources_test() {
       "let_assert",
       FILEPATH,
       "glepub_test",
-      159,
+      161,
       "resources_test",
       "Pattern match failed, no pattern matched the value.",
       {
         value: $8,
-        start: 5659,
-        end: 5695,
-        pattern_start: 5670,
-        pattern_end: 5682
+        start: 5785,
+        end: 5821,
+        pattern_start: 5796,
+        pattern_end: 5808
       }
     )
   } else {
@@ -805,15 +826,15 @@ export function resources_test() {
         "let_assert",
         FILEPATH,
         "glepub_test",
-        159,
+        161,
         "resources_test",
         "Pattern match failed, no pattern matched the value.",
         {
           value: $8,
-          start: 5659,
-          end: 5695,
-          pattern_start: 5670,
-          pattern_end: 5682
+          start: 5785,
+          end: 5821,
+          pattern_start: 5796,
+          pattern_end: 5808
         }
       )
     } else {
@@ -825,15 +846,15 @@ export function resources_test() {
           "let_assert",
           FILEPATH,
           "glepub_test",
-          159,
+          161,
           "resources_test",
           "Pattern match failed, no pattern matched the value.",
           {
             value: $8,
-            start: 5659,
-            end: 5695,
-            pattern_start: 5670,
-            pattern_end: 5682
+            start: 5785,
+            end: 5821,
+            pattern_start: 5796,
+            pattern_end: 5808
           }
         )
       }
@@ -849,15 +870,15 @@ export function resources_test() {
           "let_assert",
           FILEPATH,
           "glepub_test",
-          160,
+          162,
           "resources_test",
           "Pattern match failed, no pattern matched the value.",
           {
             value: $11,
-            start: 5698,
-            end: 5805,
-            pattern_start: 5709,
-            pattern_end: 5763
+            start: 5824,
+            end: 5931,
+            pattern_start: 5835,
+            pattern_end: 5889
           }
         )
       }
@@ -866,15 +887,15 @@ export function resources_test() {
         "let_assert",
         FILEPATH,
         "glepub_test",
-        160,
+        162,
         "resources_test",
         "Pattern match failed, no pattern matched the value.",
         {
           value: $11,
-          start: 5698,
-          end: 5805,
-          pattern_start: 5709,
-          pattern_end: 5763
+          start: 5824,
+          end: 5931,
+          pattern_start: 5835,
+          pattern_end: 5889
         }
       )
     }
@@ -883,15 +904,15 @@ export function resources_test() {
       "let_assert",
       FILEPATH,
       "glepub_test",
-      160,
+      162,
       "resources_test",
       "Pattern match failed, no pattern matched the value.",
       {
         value: $11,
-        start: 5698,
-        end: 5805,
-        pattern_start: 5709,
-        pattern_end: 5763
+        start: 5824,
+        end: 5931,
+        pattern_start: 5835,
+        pattern_end: 5889
       }
     )
   }
@@ -919,15 +940,15 @@ export function epub2_test() {
       "let_assert",
       FILEPATH,
       "glepub_test",
-      208,
+      210,
       "epub2_test",
       "Pattern match failed, no pattern matched the value.",
       {
         value: $,
-        start: 7353,
-        end: 7404,
-        pattern_start: 7364,
-        pattern_end: 7372
+        start: 7479,
+        end: 7530,
+        pattern_start: 7490,
+        pattern_end: 7498
       }
     )
   }
@@ -938,17 +959,17 @@ export function epub2_test() {
       "assert",
       FILEPATH,
       "glepub_test",
-      209,
+      211,
       "epub2_test",
       "Assertion failed.",
       {
         kind: "binary_operator",
         operator: "==",
-        left: { kind: "expression", value: $1, start: 7414, end: 7426 },
-        right: { kind: "literal", value: $2, start: 7430, end: 7435 },
-        start: 7407,
-        end: 7435,
-        expression_start: 7414
+        left: { kind: "expression", value: $1, start: 7540, end: 7552 },
+        right: { kind: "literal", value: $2, start: 7556, end: 7561 },
+        start: 7533,
+        end: 7561,
+        expression_start: 7540
       }
     )
   }
@@ -961,17 +982,17 @@ export function epub2_test() {
       "assert",
       FILEPATH,
       "glepub_test",
-      210,
+      212,
       "epub2_test",
       "Assertion failed.",
       {
         kind: "binary_operator",
         operator: "==",
-        left: { kind: "expression", value: $3, start: 7445, end: 7467 },
-        right: { kind: "literal", value: $4, start: 7475, end: 7536 },
-        start: 7438,
-        end: 7536,
-        expression_start: 7445
+        left: { kind: "expression", value: $3, start: 7571, end: 7593 },
+        right: { kind: "literal", value: $4, start: 7601, end: 7662 },
+        start: 7564,
+        end: 7662,
+        expression_start: 7571
       }
     )
   }
@@ -990,17 +1011,17 @@ export function epub2_test() {
       "assert",
       FILEPATH,
       "glepub_test",
-      214,
+      216,
       "epub2_test",
       "Assertion failed.",
       {
         kind: "binary_operator",
         operator: "==",
-        left: { kind: "expression", value: $5, start: 7606, end: 7614 },
-        right: { kind: "literal", value: $6, start: 7622, end: 7758 },
-        start: 7599,
-        end: 7758,
-        expression_start: 7606
+        left: { kind: "expression", value: $5, start: 7732, end: 7740 },
+        right: { kind: "literal", value: $6, start: 7748, end: 7884 },
+        start: 7725,
+        end: 7884,
+        expression_start: 7732
       }
     )
   }
@@ -1013,15 +1034,15 @@ export function epub2_test() {
       "let_assert",
       FILEPATH,
       "glepub_test",
-      222,
+      224,
       "epub2_test",
       "Pattern match failed, no pattern matched the value.",
       {
         value: $7,
-        start: 7824,
-        end: 7859,
-        pattern_start: 7835,
-        pattern_end: 7846
+        start: 7950,
+        end: 7985,
+        pattern_start: 7961,
+        pattern_end: 7972
       }
     )
   }
@@ -1032,17 +1053,17 @@ export function epub2_test() {
       "assert",
       FILEPATH,
       "glepub_test",
-      223,
+      225,
       "epub2_test",
       "Assertion failed.",
       {
         kind: "binary_operator",
         operator: "==",
-        left: { kind: "expression", value: $8, start: 7869, end: 7877 },
-        right: { kind: "literal", value: $9, start: 7881, end: 7896 },
-        start: 7862,
-        end: 7896,
-        expression_start: 7869
+        left: { kind: "expression", value: $8, start: 7995, end: 8003 },
+        right: { kind: "literal", value: $9, start: 8007, end: 8022 },
+        start: 7988,
+        end: 8022,
+        expression_start: 7995
       }
     )
   }
@@ -1055,17 +1076,17 @@ export function epub2_test() {
       "assert",
       FILEPATH,
       "glepub_test",
-      224,
+      226,
       "epub2_test",
       "Assertion failed.",
       {
         kind: "binary_operator",
         operator: "==",
-        left: { kind: "expression", value: $10, start: 7906, end: 7920 },
-        right: { kind: "literal", value: $11, start: 7924, end: 7972 },
-        start: 7899,
-        end: 7972,
-        expression_start: 7906
+        left: { kind: "expression", value: $10, start: 8032, end: 8046 },
+        right: { kind: "literal", value: $11, start: 8050, end: 8098 },
+        start: 8025,
+        end: 8098,
+        expression_start: 8032
       }
     )
   }
@@ -1080,17 +1101,17 @@ export function resolve_test() {
       "assert",
       FILEPATH,
       "glepub_test",
-      228,
+      230,
       "resolve_test",
       "Assertion failed.",
       {
         kind: "binary_operator",
         operator: "==",
-        left: { kind: "expression", value: $, start: 8009, end: 8056 },
-        right: { kind: "literal", value: $1, start: 8060, end: 8080 },
-        start: 8002,
-        end: 8080,
-        expression_start: 8009
+        left: { kind: "expression", value: $, start: 8135, end: 8182 },
+        right: { kind: "literal", value: $1, start: 8186, end: 8206 },
+        start: 8128,
+        end: 8206,
+        expression_start: 8135
       }
     )
   }
@@ -1101,17 +1122,17 @@ export function resolve_test() {
       "assert",
       FILEPATH,
       "glepub_test",
-      229,
+      231,
       "resolve_test",
       "Assertion failed.",
       {
         kind: "binary_operator",
         operator: "==",
-        left: { kind: "expression", value: $2, start: 8090, end: 8135 },
-        right: { kind: "literal", value: $3, start: 8139, end: 8161 },
-        start: 8083,
-        end: 8161,
-        expression_start: 8090
+        left: { kind: "expression", value: $2, start: 8216, end: 8261 },
+        right: { kind: "literal", value: $3, start: 8265, end: 8287 },
+        start: 8209,
+        end: 8287,
+        expression_start: 8216
       }
     )
   }
@@ -1122,17 +1143,17 @@ export function resolve_test() {
       "assert",
       FILEPATH,
       "glepub_test",
-      230,
+      232,
       "resolve_test",
       "Assertion failed.",
       {
         kind: "binary_operator",
         operator: "==",
-        left: { kind: "expression", value: $4, start: 8171, end: 8202 },
-        right: { kind: "literal", value: $5, start: 8206, end: 8217 },
-        start: 8164,
-        end: 8217,
-        expression_start: 8171
+        left: { kind: "expression", value: $4, start: 8297, end: 8328 },
+        right: { kind: "literal", value: $5, start: 8332, end: 8343 },
+        start: 8290,
+        end: 8343,
+        expression_start: 8297
       }
     )
   }
@@ -1143,17 +1164,17 @@ export function resolve_test() {
       "assert",
       FILEPATH,
       "glepub_test",
-      231,
+      233,
       "resolve_test",
       "Assertion failed.",
       {
         kind: "binary_operator",
         operator: "==",
-        left: { kind: "expression", value: $6, start: 8227, end: 8267 },
-        right: { kind: "literal", value: $7, start: 8271, end: 8285 },
-        start: 8220,
-        end: 8285,
-        expression_start: 8227
+        left: { kind: "expression", value: $6, start: 8353, end: 8393 },
+        right: { kind: "literal", value: $7, start: 8397, end: 8411 },
+        start: 8346,
+        end: 8411,
+        expression_start: 8353
       }
     )
   }
@@ -1163,15 +1184,15 @@ export function resolve_test() {
       "assert",
       FILEPATH,
       "glepub_test",
-      232,
+      234,
       "resolve_test",
       "Assertion failed.",
       {
         kind: "function_call",
-        arguments: [{ kind: "literal", value: $8, start: 8314, end: 8337 }],
-        start: 8288,
-        end: 8338,
-        expression_start: 8295
+        arguments: [{ kind: "literal", value: $8, start: 8440, end: 8463 }],
+        start: 8414,
+        end: 8464,
+        expression_start: 8421
       }
     )
   }
@@ -1180,15 +1201,15 @@ export function resolve_test() {
       "assert",
       FILEPATH,
       "glepub_test",
-      233,
+      235,
       "resolve_test",
       "Assertion failed.",
       {
         kind: "expression",
-        expression: { kind: "expression", value: false, start: 8348, end: 8390 },
-        start: 8341,
-        end: 8390,
-        expression_start: 8348
+        expression: { kind: "expression", value: false, start: 8474, end: 8516 },
+        start: 8467,
+        end: 8516,
+        expression_start: 8474
       }
     )
   }
@@ -1206,15 +1227,15 @@ export function missing_container_test() {
           "let_assert",
           FILEPATH,
           "glepub_test",
-          237,
+          239,
           "missing_container_test",
           "Pattern match failed, no pattern matched the value.",
           {
             value: $,
-            start: 8430,
-            end: 8525,
-            pattern_start: 8441,
-            pattern_end: 8492
+            start: 8556,
+            end: 8651,
+            pattern_start: 8567,
+            pattern_end: 8618
           }
         )
       }
@@ -1223,15 +1244,15 @@ export function missing_container_test() {
         "let_assert",
         FILEPATH,
         "glepub_test",
-        237,
+        239,
         "missing_container_test",
         "Pattern match failed, no pattern matched the value.",
         {
           value: $,
-          start: 8430,
-          end: 8525,
-          pattern_start: 8441,
-          pattern_end: 8492
+          start: 8556,
+          end: 8651,
+          pattern_start: 8567,
+          pattern_end: 8618
         }
       )
     }
@@ -1240,15 +1261,15 @@ export function missing_container_test() {
       "let_assert",
       FILEPATH,
       "glepub_test",
-      237,
+      239,
       "missing_container_test",
       "Pattern match failed, no pattern matched the value.",
       {
         value: $,
-        start: 8430,
-        end: 8525,
-        pattern_start: 8441,
-        pattern_end: 8492
+        start: 8556,
+        end: 8651,
+        pattern_start: 8567,
+        pattern_end: 8618
       }
     )
   }

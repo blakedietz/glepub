@@ -103,7 +103,15 @@ pub type ManifestItem {
 }
 
 pub type SpineItem {
-  SpineItem(item: ManifestItem, linear: Bool, properties: List(String))
+  SpineItem(
+    item: ManifestItem,
+    linear: Bool,
+    properties: List(String),
+    /// The CFI path to this itemref in the package document, e.g.
+    /// `/6/4[chap01ref]` — the part of an `epubcfi(...)` locator before
+    /// the `!` indirection. See `glepub/cfi`.
+    cfi: String,
+  )
 }
 
 /// One entry of a table of contents, page list, or landmarks navigation.
@@ -228,17 +236,26 @@ fn build_book(
     |> list.map(fn(item) { #(item.id, item) })
     |> dict.from_list
 
+  // CFI child steps count element children only, before any filtering, so
+  // the paths stay valid even when an itemref is broken and dropped.
+  let spine_cfi = cfi_step(package, spine_element)
   let spine =
-    children_local(spine_element, "itemref")
-    |> list.filter_map(fn(itemref) {
+    glexml.child_elements(spine_element)
+    |> list.index_map(fn(itemref, position) {
+      use <- require(glexml.local_name(itemref.name) == "itemref")
       use idref <- result.try(glexml.attribute(itemref, "idref"))
       use item <- result.try(dict.get(by_id, idref))
       Ok(SpineItem(
         item: item,
         linear: glexml.attribute(itemref, "linear") != Ok("no"),
         properties: properties_of(itemref),
+        cfi: spine_cfi
+          <> "/"
+          <> int.to_string(2 * { position + 1 })
+          <> cfi_assertion(itemref),
       ))
     })
+    |> result.values
 
   let metadata = parse_metadata(package, metadata_element)
   let #(toc, page_list, landmarks) =
@@ -679,6 +696,31 @@ fn read_xml(loader: Loader, path: String) -> Result(Document, EpubError) {
   )
   glexml.parse_bytes(bytes)
   |> result.map_error(InvalidXml(path, _))
+}
+
+/// The CFI child step addressing `child` within `parent`: element
+/// children get even indices 2, 4, 6…, with the element's own id as an
+/// assertion when it has one.
+fn cfi_step(parent: Element, child: Element) -> String {
+  let position =
+    glexml.child_elements(parent)
+    |> list.take_while(fn(element) { element != child })
+    |> list.length
+  "/" <> int.to_string(2 * { position + 1 }) <> cfi_assertion(child)
+}
+
+fn cfi_assertion(element: Element) -> String {
+  case glexml.attribute(element, "id") {
+    Ok(id) -> "[" <> id <> "]"
+    Error(Nil) -> ""
+  }
+}
+
+fn require(condition: Bool, next: fn() -> Result(a, Nil)) -> Result(a, Nil) {
+  case condition {
+    True -> next()
+    False -> Error(Nil)
+  }
 }
 
 /// Element children matched by local name, so `dc:title` and plain `title`
