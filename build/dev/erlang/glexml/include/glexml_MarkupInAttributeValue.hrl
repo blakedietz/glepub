@@ -1,1 +1,0 @@
--record(markup_in_attribute_value, {entity :: binary()}).

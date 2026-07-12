@@ -1,1 +1,0 @@
--record(unbalanced_entity, {entity :: binary()}).

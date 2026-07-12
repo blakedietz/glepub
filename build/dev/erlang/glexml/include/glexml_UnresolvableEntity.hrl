@@ -1,1 +1,0 @@
--record(unresolvable_entity, {entity :: binary()}).

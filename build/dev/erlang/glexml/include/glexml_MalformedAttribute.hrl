@@ -1,1 +1,0 @@
--record(malformed_attribute, {attribute :: binary()}).

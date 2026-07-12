@@ -1,1 +1,0 @@
--record(declared_encoding_mismatch, {declared :: binary(), detected :: binary()}).

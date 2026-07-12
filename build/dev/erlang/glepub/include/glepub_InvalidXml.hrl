@@ -1,1 +1,0 @@
--record(invalid_xml, {path :: binary(), error :: glexml:parse_error()}).

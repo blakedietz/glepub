@@ -1,1 +1,0 @@
--record(root_element_mismatch, {expected :: binary(), found :: binary()}).

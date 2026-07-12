@@ -1,1 +1,0 @@
--record(mixed_content, {allowed :: list(binary())}).

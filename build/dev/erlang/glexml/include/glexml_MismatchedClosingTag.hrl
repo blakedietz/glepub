@@ -1,1 +1,0 @@
--record(mismatched_closing_tag, {opening :: binary(), closing :: binary()}).

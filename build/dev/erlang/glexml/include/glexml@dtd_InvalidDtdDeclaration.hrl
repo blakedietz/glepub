@@ -1,1 +1,0 @@
--record(invalid_dtd_declaration, {element :: binary(), description :: binary()}).

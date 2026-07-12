@@ -1,0 +1,45 @@
+name: release
+
+# Publishes to Hex when a version tag is pushed:
+#
+#   git tag v0.2.0 && git push origin v0.2.0
+#
+# Requires the HEXPM_API_KEY repository secret, and requires glexml to
+# already be published to Hex: the path dependency used for co-development
+# is swapped for the Hex release before publishing.
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: "29"
+          gleam-version: "1.17.0"
+          rebar3-version: "3"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Check the tag matches gleam.toml
+        run: |
+          version="v$(grep -m1 '^version' gleam.toml | cut -d'"' -f2)"
+          if [ "$version" != "$GITHUB_REF_NAME" ]; then
+            echo "gleam.toml says $version but the tag is $GITHUB_REF_NAME" >&2
+            exit 1
+          fi
+      - name: Swap the glexml path dependency for the Hex release
+        run: |
+          sed -i 's#^glexml = { path = "../glexml" }#glexml = ">= 1.0.0 and < 2.0.0"#' gleam.toml
+          grep -q '^glexml = ">= 1.0.0' gleam.toml
+      - run: gleam deps download
+      - run: gleam test --target erlang
+      - run: gleam test --target javascript
+      - run: gleam publish --yes
+        env:
+          HEXPM_API_KEY: ${{ secrets.HEXPM_API_KEY }}

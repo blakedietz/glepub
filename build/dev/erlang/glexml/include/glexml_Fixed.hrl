@@ -1,1 +1,0 @@
--record(fixed, {value :: binary()}).

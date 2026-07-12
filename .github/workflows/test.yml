@@ -1,0 +1,36 @@
+name: test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: glepub
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          path: glepub
+      # glexml is a path dependency at ../glexml until it is co-developed
+      # no longer; check it out alongside.
+      - uses: actions/checkout@v6
+        with:
+          repository: blakedietz/glexml
+          path: glexml
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: "29"
+          gleam-version: "1.17.0"
+          rebar3-version: "3"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: gleam deps download
+      - run: gleam test --target erlang
+      - run: gleam test --target javascript
+      - run: gleam format --check src test

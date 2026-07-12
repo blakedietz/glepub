@@ -1,1 +1,0 @@
--record(entity_reference_node, {entity :: binary()}).

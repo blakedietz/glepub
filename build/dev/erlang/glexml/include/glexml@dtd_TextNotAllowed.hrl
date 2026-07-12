@@ -1,1 +1,0 @@
--record(text_not_allowed, {element :: binary()}).

@@ -1,1 +1,0 @@
--record(recursive_entity, {entity :: binary()}).

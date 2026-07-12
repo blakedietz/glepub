@@ -1,1 +1,0 @@
--record(text_node, {text :: binary(), literal :: boolean()}).

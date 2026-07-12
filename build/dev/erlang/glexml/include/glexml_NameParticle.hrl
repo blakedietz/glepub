@@ -1,1 +1,0 @@
--record(name_particle, {name :: binary(), occurrence :: glexml:occurrence()}).

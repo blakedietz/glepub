@@ -1,1 +1,0 @@
--record(missing_required_attribute, {element :: binary(), attribute :: binary()}).

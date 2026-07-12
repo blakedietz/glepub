@@ -1,1 +1,0 @@
--record(unexpected_character, {character :: binary()}).

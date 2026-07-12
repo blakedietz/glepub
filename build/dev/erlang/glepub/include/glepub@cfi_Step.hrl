@@ -1,1 +1,0 @@
--record(step, {index :: integer(), assertion :: gleam@option:option(binary())}).

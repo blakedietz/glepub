@@ -1,7 +1,7 @@
 # glepub
 
 An EPUB toolkit for the Erlang and JavaScript targets — the format layer of
-an EPUB reader, built on [glexml](../glexml) and modelled on
+an EPUB reader, built on [glexml](https://github.com/blakedietz/glexml) and modelled on
 [foliate-js](https://github.com/johnfactotum/foliate-js)'s architecture.
 
 Like glexml underneath it, glepub performs no I/O. Opening a book takes a

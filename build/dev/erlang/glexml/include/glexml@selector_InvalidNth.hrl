@@ -1,1 +1,0 @@
--record(invalid_nth, {argument :: binary()}).

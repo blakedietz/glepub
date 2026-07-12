@@ -1,1 +1,0 @@
--record(undeclared_attribute, {element :: binary(), attribute :: binary()}).

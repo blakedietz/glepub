@@ -1,1 +1,0 @@
--record(enumerated_attribute, {allowed :: list(binary())}).

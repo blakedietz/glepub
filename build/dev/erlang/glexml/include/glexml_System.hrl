@@ -1,1 +1,0 @@
--record(system, {system :: binary()}).
