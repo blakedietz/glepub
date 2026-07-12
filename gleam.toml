@@ -1,5 +1,5 @@
 name = "glepub"
-version = "0.2.0"
+version = "0.1.0"
 description = "An EPUB toolkit for the Erlang and JavaScript targets, built on glexml"
 licences = ["Apache-2.0"]
 repository = { type = "github", user = "blakedietz", repo = "glepub" }
