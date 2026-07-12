@@ -40,6 +40,8 @@ jobs:
       - run: gleam deps download
       - run: gleam test --target erlang
       - run: gleam test --target javascript
-      - run: gleam publish --yes
+      # For 0.x releases gleam asks for a typed confirmation that --yes
+      # does not cover; pipe the phrase in so CI can answer it.
+      - run: echo 'I am not using semantic versioning' | gleam publish --yes
         env:
           HEXPM_API_KEY: ${{ secrets.HEXPM_API_KEY }}
