@@ -1,0 +1,1 @@
+-record(notation_attribute, {allowed :: list(binary())}).

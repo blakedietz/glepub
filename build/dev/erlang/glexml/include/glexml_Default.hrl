@@ -1,0 +1,1 @@
+-record(default, {value :: binary()}).

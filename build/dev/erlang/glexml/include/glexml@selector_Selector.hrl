@@ -1,0 +1,1 @@
+-record(selector, {alternatives :: list(glexml@selector:complex())}).

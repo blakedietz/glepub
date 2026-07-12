@@ -1,0 +1,1 @@
+-record(undeclared_entity, {entity :: binary()}).

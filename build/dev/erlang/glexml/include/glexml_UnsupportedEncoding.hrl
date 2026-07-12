@@ -1,0 +1,1 @@
+-record(unsupported_encoding, {encoding :: binary()}).

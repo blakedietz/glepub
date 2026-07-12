@@ -1,0 +1,1 @@
+-record(invalid_character_reference, {reference :: binary()}).

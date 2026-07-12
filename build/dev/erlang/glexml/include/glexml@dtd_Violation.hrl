@@ -1,0 +1,1 @@
+-record(violation, {path :: binary(), problem :: glexml@dtd:problem()}).

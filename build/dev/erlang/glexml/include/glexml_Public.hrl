@@ -1,0 +1,1 @@
+-record(public, {public :: binary(), system :: gleam@option:option(binary())}).

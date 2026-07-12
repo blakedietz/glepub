@@ -1,0 +1,1 @@
+-record(internal_entity, {replacement :: binary()}).

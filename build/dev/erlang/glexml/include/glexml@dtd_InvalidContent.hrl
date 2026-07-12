@@ -1,0 +1,1 @@
+-record(invalid_content, {element :: binary(), model :: binary()}).

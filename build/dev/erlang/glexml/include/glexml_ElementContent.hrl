@@ -1,0 +1,1 @@
+-record(element_content, {particle :: glexml:particle()}).
