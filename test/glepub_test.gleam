@@ -3,7 +3,9 @@ import gleam/dict
 import gleam/list
 import gleam/option.{None, Some}
 import gleeunit
-import glepub.{Contributor, TocEntry}
+import glepub.{
+  Contributor, DocumentHeading, DocumentTitle, TocEntry, TocLabel, Unlabelled,
+}
 import glexml
 
 pub fn main() -> Nil {
@@ -146,6 +148,72 @@ pub fn toc_test() {
     ]
   assert book.landmarks
     == [TocEntry("Start", Some("OEBPS/text/chapter1.xhtml"), [])]
+}
+
+pub fn sparse_toc_spine_navigation_test() {
+  let files = [
+    #("META-INF/container.xml", container_xml),
+    #(
+      "OEBPS/content.opf",
+      "<?xml version=\"1.0\"?>
+<package xmlns=\"http://www.idpf.org/2007/opf\" version=\"3.0\" unique-identifier=\"bookid\">
+  <metadata xmlns:dc=\"http://purl.org/dc/elements/1.1/\">
+    <dc:identifier id=\"bookid\">sparse-navigation</dc:identifier>
+    <dc:title>Sparse Navigation</dc:title>
+    <dc:language>en</dc:language>
+  </metadata>
+  <manifest>
+    <item id=\"nav\" href=\"nav.xhtml\" media-type=\"application/xhtml+xml\" properties=\"nav\"/>
+    <item id=\"one\" href=\"one.xhtml\" media-type=\"application/xhtml+xml\"/>
+    <item id=\"two\" href=\"two.xhtml\" media-type=\"application/xhtml+xml\"/>
+    <item id=\"three\" href=\"three.xhtml\" media-type=\"application/xhtml+xml\"/>
+    <item id=\"four\" href=\"four.xhtml\" media-type=\"application/xhtml+xml\"/>
+  </manifest>
+  <spine>
+    <itemref idref=\"one\"/>
+    <itemref idref=\"two\"/>
+    <itemref idref=\"three\"/>
+    <itemref idref=\"four\"/>
+  </spine>
+</package>",
+    ),
+    #(
+      "OEBPS/nav.xhtml",
+      "<?xml version=\"1.0\"?>
+<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:epub=\"http://www.idpf.org/2007/ops\">
+  <body><nav epub:type=\"toc\"><ol>
+    <li><a href=\"one.xhtml\">Published label</a></li>
+  </ol></nav></body>
+</html>",
+    ),
+    #(
+      "OEBPS/one.xhtml",
+      "<html xmlns=\"http://www.w3.org/1999/xhtml\"><body><h1>Ignored heading</h1></body></html>",
+    ),
+    #(
+      "OEBPS/two.xhtml",
+      "<html xmlns=\"http://www.w3.org/1999/xhtml\"><head><title>Ignored title</title></head><body><p class=\"h1\">Recovered heading</p></body></html>",
+    ),
+    #(
+      "OEBPS/three.xhtml",
+      "<html xmlns=\"http://www.w3.org/1999/xhtml\"><head><title>Recovered title</title></head><body><p>Text</p></body></html>",
+    ),
+    #(
+      "OEBPS/four.xhtml",
+      "<html xmlns=\"http://www.w3.org/1999/xhtml\"><body><p>Text</p></body></html>",
+    ),
+  ]
+  let assert Ok(book) = glepub.open(loader_of(files))
+
+  assert book.toc == [TocEntry("Published label", Some("OEBPS/one.xhtml"), [])]
+  assert glepub.spine_navigation(book)
+    |> list.map(fn(entry) { entry.label })
+    == [
+      TocLabel("Published label"),
+      DocumentHeading("Recovered heading"),
+      DocumentTitle("Recovered title"),
+      Unlabelled,
+    ]
 }
 
 pub fn resources_test() {

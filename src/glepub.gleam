@@ -126,6 +126,23 @@ pub type TocEntry {
   )
 }
 
+/// Where the display label for a spine document came from. The publication's
+/// navigation remains authoritative when it names the document; headings and
+/// the document title are explicit fallbacks for sparse EPUB navigation.
+pub type SpineLabel {
+  TocLabel(String)
+  DocumentHeading(String)
+  DocumentTitle(String)
+  Unlabelled
+}
+
+/// A spine item paired with the best navigation label the publication makes
+/// available for it. This is derived navigation; `Book.toc` always remains the
+/// unmodified EPUB 3 nav or EPUB 2 NCX tree.
+pub type SpineNavigationEntry {
+  SpineNavigationEntry(item: SpineItem, label: SpineLabel)
+}
+
 pub type Direction {
   LeftToRight
   RightToLeft
@@ -302,6 +319,24 @@ pub fn resource(book: Book, item: ManifestItem) -> Result(BitArray, EpubError) {
 /// supply them with `document_with_dtd` if you need them.
 pub fn document(book: Book, item: ManifestItem) -> Result(Document, EpubError) {
   document_with_dtd(book, item, glexml.empty_dtd())
+}
+
+/// Pair every spine item with its first TOC label, or a label recovered from
+/// the content document when the EPUB's navigation does not include it.
+///
+/// Consumers that need document-granularity reading units can use this instead
+/// of guessing that an unlisted document belongs to the preceding TOC entry.
+/// The spine's `linear` flags are preserved on each returned item.
+pub fn spine_navigation(book: Book) -> List(SpineNavigationEntry) {
+  let toc_labels = collect_toc_labels(book.toc, dict.new())
+
+  list.map(book.spine, fn(spine_item) {
+    let label = case dict.get(toc_labels, spine_item.item.href) {
+      Ok(label) -> TocLabel(label)
+      Error(Nil) -> document_spine_label(book, spine_item.item)
+    }
+    SpineNavigationEntry(item: spine_item, label: label)
+  })
 }
 
 /// Like `document`, with extra DTD declarations available — typically the
@@ -605,6 +640,53 @@ fn guide_landmarks(package: Element, base: String) -> List(TocEntry) {
         )
       })
   }
+}
+
+fn collect_toc_labels(
+  entries: List(TocEntry),
+  labels: Dict(String, String),
+) -> Dict(String, String) {
+  list.fold(entries, labels, fn(labels, entry) {
+    let label = string.trim(entry.label)
+    let labels = case entry.href, label {
+      Some(href), label if label != "" -> {
+        let path = strip_fragment(href)
+        case dict.has_key(labels, path) {
+          True -> labels
+          False -> dict.insert(labels, path, label)
+        }
+      }
+      _, _ -> labels
+    }
+    collect_toc_labels(entry.children, labels)
+  })
+}
+
+fn document_spine_label(book: Book, item: ManifestItem) -> SpineLabel {
+  case document(book, item) {
+    Error(_) -> Unlabelled
+    Ok(document) ->
+      case
+        selected_text(
+          document.root,
+          "*|h1, *|h2, *|h3, *|h4, *|h5, *|h6, .h1, .h2, .h3, .h4, .h5, .h6",
+        )
+      {
+        Some(label) -> DocumentHeading(label)
+        None ->
+          case selected_text(document.root, "*|title") {
+            Some(label) -> DocumentTitle(label)
+            None -> Unlabelled
+          }
+      }
+  }
+}
+
+fn selected_text(root: Element, css: String) -> Option(String) {
+  selector_all(root, css)
+  |> list.map(text_of)
+  |> list.find(fn(label) { label != "" })
+  |> option.from_result
 }
 
 // Paths -------------------------------------------------------------------------
