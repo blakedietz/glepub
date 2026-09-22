@@ -216,6 +216,78 @@ pub fn sparse_toc_spine_navigation_test() {
     ]
 }
 
+pub fn generic_document_titles_are_unlabelled_test() {
+  let files = [
+    #("META-INF/container.xml", container_xml),
+    #(
+      "OEBPS/content.opf",
+      "<?xml version=\"1.0\"?>
+<package xmlns=\"http://www.idpf.org/2007/opf\" version=\"3.0\" unique-identifier=\"bookid\">
+  <metadata xmlns:dc=\"http://purl.org/dc/elements/1.1/\">
+    <dc:identifier id=\"bookid\">generic-titles</dc:identifier>
+    <dc:title>Infinite Jest</dc:title>
+    <dc:language>en</dc:language>
+  </metadata>
+  <manifest>
+    <item id=\"nav\" href=\"nav.xhtml\" media-type=\"application/xhtml+xml\" properties=\"nav\"/>
+    <item id=\"unknown\" href=\"unknown.xhtml\" media-type=\"application/xhtml+xml\"/>
+    <item id=\"untitled\" href=\"untitled.xhtml\" media-type=\"application/xhtml+xml\"/>
+    <item id=\"blank\" href=\"blank.xhtml\" media-type=\"application/xhtml+xml\"/>
+    <item id=\"book\" href=\"book.xhtml\" media-type=\"application/xhtml+xml\"/>
+    <item id=\"real\" href=\"real.xhtml\" media-type=\"application/xhtml+xml\"/>
+  </manifest>
+  <spine>
+    <itemref idref=\"unknown\"/>
+    <itemref idref=\"untitled\"/>
+    <itemref idref=\"blank\"/>
+    <itemref idref=\"book\"/>
+    <itemref idref=\"real\"/>
+  </spine>
+</package>",
+    ),
+    #(
+      "OEBPS/nav.xhtml",
+      "<?xml version=\"1.0\"?>
+<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:epub=\"http://www.idpf.org/2007/ops\">
+  <body><nav epub:type=\"toc\"><ol></ol></nav></body>
+</html>",
+    ),
+    #(
+      "OEBPS/unknown.xhtml",
+      "<html xmlns=\"http://www.w3.org/1999/xhtml\"><head><title>Unknown</title></head><body><p>Text</p></body></html>",
+    ),
+    #(
+      "OEBPS/untitled.xhtml",
+      "<html xmlns=\"http://www.w3.org/1999/xhtml\"><head><title> untitled </title></head><body><p>Text</p></body></html>",
+    ),
+    #(
+      "OEBPS/blank.xhtml",
+      "<html xmlns=\"http://www.w3.org/1999/xhtml\"><head><title>  </title></head><body><p>Text</p></body></html>",
+    ),
+    #(
+      "OEBPS/book.xhtml",
+      "<html xmlns=\"http://www.w3.org/1999/xhtml\"><head><title>INFINITE JEST</title></head><body><p>Text</p></body></html>",
+    ),
+    #(
+      "OEBPS/real.xhtml",
+      "<html xmlns=\"http://www.w3.org/1999/xhtml\"><head><title>Notes and Errata</title></head><body><p>Text</p></body></html>",
+    ),
+  ]
+  let assert Ok(book) = glepub.open(loader_of(files))
+
+  // Converter placeholders and the book's own title name nothing; a heading
+  // would still win over any title.
+  assert glepub.spine_navigation(book)
+    |> list.map(fn(entry) { entry.label })
+    == [
+      Unlabelled,
+      Unlabelled,
+      Unlabelled,
+      Unlabelled,
+      DocumentTitle("Notes and Errata"),
+    ]
+}
+
 pub fn resources_test() {
   let assert Ok(book) = glepub.open(epub3())
   let assert [first, ..] = book.spine

@@ -128,7 +128,10 @@ pub type TocEntry {
 
 /// Where the display label for a spine document came from. The publication's
 /// navigation remains authoritative when it names the document; headings and
-/// the document title are explicit fallbacks for sparse EPUB navigation.
+/// the document title are explicit fallbacks for sparse EPUB navigation. A
+/// title that names nothing — blank, "Unknown", "Untitled", or the book's own
+/// title, as converters stamp on every file — is reported as `Unlabelled`
+/// rather than passed off as a label.
 pub type SpineLabel {
   TocLabel(String)
   DocumentHeading(String)
@@ -675,10 +678,24 @@ fn document_spine_label(book: Book, item: ManifestItem) -> SpineLabel {
         Some(label) -> DocumentHeading(label)
         None ->
           case selected_text(document.root, "*|title") {
-            Some(label) -> DocumentTitle(label)
+            Some(label) ->
+              case generic_title(label, book.metadata.title) {
+                True -> Unlabelled
+                False -> DocumentTitle(label)
+              }
             None -> Unlabelled
           }
       }
+  }
+}
+
+/// A document title that carries no information about the document: the
+/// placeholders converters write into every file, or the book's own title
+/// repeated on each page.
+fn generic_title(title: String, book_title: String) -> Bool {
+  case string.lowercase(string.trim(title)) {
+    "" | "unknown" | "untitled" -> True
+    lowered -> lowered == string.lowercase(string.trim(book_title))
   }
 }
 
