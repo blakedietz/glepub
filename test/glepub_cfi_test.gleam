@@ -2,6 +2,7 @@ import gleam/bit_array
 import gleam/dict
 import gleam/list
 import gleam/option.{None, Some}
+import gleam/order
 import glepub
 import glepub/cfi.{Cfi, Step}
 
@@ -31,10 +32,82 @@ pub fn parse_rejects_test() {
   assert cfi.parse("not a cfi") == Error(Nil)
   assert cfi.parse("epubcfi()") == Error(Nil)
   assert cfi.parse("epubcfi(6/4)") == Error(Nil)
-  // Range CFIs are out of scope.
+  // Range CFIs are parse_range's job, not a point parse.
   assert cfi.parse("epubcfi(/6/4!/4,/10/2:1,/10/2:5)") == Error(Nil)
   // Offsets only come last.
   assert cfi.parse("epubcfi(/6/4:2/2)") == Error(Nil)
+}
+
+pub fn parse_range_test() {
+  let assert Ok(range) = cfi.parse_range("epubcfi(/6/4!/4,/10/2:1,/10/2:5)")
+  assert cfi.to_string(cfi.range_start(range)) == "epubcfi(/6/4!/4/10/2:1)"
+  assert cfi.to_string(cfi.range_end(range)) == "epubcfi(/6/4!/4/10/2:5)"
+  // Printing is canonical: the parent takes the maximal shared prefix,
+  // whatever split the range arrived with.
+  assert cfi.range_to_string(range) == "epubcfi(/6/4!/4/10/2,:1,:5)"
+  let assert Ok(reparsed) = cfi.parse_range("epubcfi(/6/4!/4/10/2,:1,:5)")
+  assert reparsed == range
+}
+
+pub fn parse_range_diverging_locals_test() {
+  // Endpoints in different elements round-trip exactly.
+  let assert Ok(range) = cfi.parse_range("epubcfi(/6/4!/4,/10/1:2,/14/1:7)")
+  assert cfi.range_to_string(range) == "epubcfi(/6/4!/4,/10/1:2,/14/1:7)"
+  assert cfi.path_to_string(cfi.range_start(range)) == "/6/4!/4/10/1:2"
+  assert cfi.range_path_to_string(range) == "/6/4!/4,/10/1:2,/14/1:7"
+}
+
+pub fn parse_range_assertions_test() {
+  let assert Ok(range) =
+    cfi.parse_range("epubcfi(/6/4[chap01ref]!/4[body01],/10/1:2,/12/1:3)")
+  assert cfi.range_to_string(range)
+    == "epubcfi(/6/4[chap01ref]!/4[body01],/10/1:2,/12/1:3)"
+}
+
+pub fn parse_range_rejects_test() {
+  // A point is not a range.
+  assert cfi.parse_range("epubcfi(/6/4!/4/10/2:1)") == Error(Nil)
+  // Both locals must be present.
+  assert cfi.parse_range("epubcfi(/6/4,/2)") == Error(Nil)
+  // The parent path cannot carry an offset.
+  assert cfi.parse_range("epubcfi(/6/4:3,/2,/4)") == Error(Nil)
+  // Locals cannot cross a `!` indirection of their own.
+  assert cfi.parse_range("epubcfi(/6/2,/2,/4!/2)") == Error(Nil)
+}
+
+pub fn range_constructor_test() {
+  let assert Ok(late) = cfi.parse("epubcfi(/6/4!/4/10/1:7)")
+  let assert Ok(early) = cfi.parse("epubcfi(/6/4!/4/10/1:2)")
+  // Backwards endpoints are normalised into document order.
+  let assert Ok(range) = cfi.range(from: late, to: early)
+  assert cfi.range_start(range) == early
+  assert cfi.range_end(range) == late
+  // Endpoints in different chapters do not form a range.
+  let assert Ok(elsewhere) = cfi.parse("epubcfi(/6/6!/4/2)")
+  assert cfi.range(from: late, to: elsewhere) == Error(Nil)
+}
+
+pub fn range_ancestor_endpoint_test() {
+  // A start that is an ancestor of the end arrives as an empty local; the
+  // printer backs the parent off one step so both locals print non-empty.
+  let assert Ok(range) = cfi.parse_range("epubcfi(/6/4!/4/10,,/3:5)")
+  assert cfi.to_string(cfi.range_start(range)) == "epubcfi(/6/4!/4/10)"
+  assert cfi.range_to_string(range) == "epubcfi(/6/4!/4,/10,/10/3:5)"
+}
+
+pub fn compare_test() {
+  let assert Ok(early) = cfi.parse("epubcfi(/6/4!/4/10/1:2)")
+  let assert Ok(late) = cfi.parse("epubcfi(/6/4!/4/10/1:7)")
+  let assert Ok(next_element) = cfi.parse("epubcfi(/6/4!/4/12)")
+  let assert Ok(ancestor) = cfi.parse("epubcfi(/6/4!/4/10)")
+  let assert Ok(next_chapter) = cfi.parse("epubcfi(/6/6!/4/2)")
+  assert cfi.compare(early, late) == order.Lt
+  assert cfi.compare(late, early) == order.Gt
+  assert cfi.compare(early, early) == order.Eq
+  assert cfi.compare(late, next_element) == order.Lt
+  // A node sorts before its own contents.
+  assert cfi.compare(ancestor, early) == order.Lt
+  assert cfi.compare(next_element, next_chapter) == order.Lt
 }
 
 pub fn path_to_string_test() {
